@@ -10,6 +10,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
+import static com.sun.xml.internal.ws.api.model.wsdl.WSDLBoundOperation.ANONYMOUS.optional;
+
 public class AbonnementDAO {
 
     private Connection con;
@@ -30,11 +32,28 @@ public class AbonnementDAO {
             Logger.error(e.getMessage());
         }
     };
-    Abonnement findById(){
-        return null;
-    };
+    public Abonnement findById() {
+        try {
+            List<Abonnement> abonnements = findAll(); // récupère la liste
+
+            Abonnement abonnement = abonnements.stream()
+                    .filter(a -> a.getId().isEmpty())
+                    .findFirst()
+                    .orElseThrow(() ->{
+                       Exception error =   new Exception("Abonnement non trouvé");
+                        Logger.error(error.getMessage());
+                        return error;
+                    });
+            return abonnement;
+
+        } catch (Exception e) {
+            Logger.error(e.getMessage());
+            return null;
+        }
+    }
+
     List<Abonnement> findAll(){
-        return null;
+
     };
     void update(){};
     void delete(){};
