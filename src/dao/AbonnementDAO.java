@@ -39,6 +39,8 @@ public class AbonnementDAO {
                  pstmt.setInt(6, 0);
              }
              pstmt.executeUpdate();
+
+            System.out.println("-----------------Abonnement créé avec succès.-------------------");
         }catch(SQLException e){
             Logger.error(e.getMessage());
         }
@@ -87,6 +89,7 @@ public class AbonnementDAO {
                     abonnements.add(abonnement);
                 }
             }
+            System.out.println("-----------------Abonnements récupérés avec succès.-------------------");
         } catch (Exception e) {
             Logger.error(e.getMessage());
             return new ArrayList<>();
@@ -95,7 +98,20 @@ public class AbonnementDAO {
         return abonnements;
     }
 
-    void update(){};
+    void update(Abonnement a){
+        String sql = "UPDATE abonnement (nomService ,statut) VALUE (?,?) where id = ?";
+        try {
+            PreparedStatement stmt = this.con.prepareStatement(sql);
+            stmt.setString(1, a.getNomService());
+            stmt.setString(2, a.getStatut().toString());
+            stmt.setString(3, a.getId());
+            stmt.executeUpdate();
+            System.out.println("-----------------Abonnement mis à jour avec succès.-------------------");
+        }catch (Exception e){
+            Logger.error(e.getMessage());
+        }
+
+    };
     void delete(){};
     List<Abonnement> findActiveSubscriptions(){};
 }
