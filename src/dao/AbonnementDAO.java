@@ -112,6 +112,18 @@ public class AbonnementDAO {
         }
 
     };
-    void delete(){};
-    List<Abonnement> findActiveSubscriptions(){};
+    void delete(Abonnement a){
+        String sql = "DELETE FROM abonnement where id = ?";
+        try {
+            PreparedStatement stmt = this.con.prepareStatement(sql);
+            stmt.setString(1, a.getId());
+            stmt.executeUpdate();
+            System.out.println("-----------------Abonnement supprimé avec succès.-------------------");
+        }catch (Exception e){
+            Logger.error(e.getMessage());
+        }
+    };
+    List<Abonnement> findActiveSubscriptions(){
+
+    };
 }
