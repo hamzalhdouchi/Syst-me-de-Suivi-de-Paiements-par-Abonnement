@@ -70,4 +70,6 @@ public abstract class Abonnement {
     public void setStatut(StatutAbonnement statut) {
         this.statut = statut;
     }
+
+
 }
