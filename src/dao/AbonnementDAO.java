@@ -5,7 +5,6 @@ import dbConnection.DataBase;
 import model.entity.Abonnement;
 import model.entity.AbonnementAvecEngagement;
 import model.entity.AbonnementSansEngagement;
-import model.enums.StatutAbonnement;
 import model.enums.statusabonnement;
 import util.Logger;
 
@@ -124,6 +123,36 @@ public class AbonnementDAO {
         }
     };
     List<Abonnement> findActiveSubscriptions(){
+        List<Abonnement> abonnements = new ArrayList<>();
+        String SQL = "SELECT * FROM Abonnement WHERE statut = 'ACTIF'";
 
+        try {
+            PreparedStatement stmt = this.con.prepareStatement(SQL);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                String id = rs.getString("id");
+                String nomService = rs.getString("nomService");
+                double montantMensuel = rs.getDouble("montantMensuel");
+                LocalDate dateDebut = rs.getDate("dateDebut").toLocalDate();
+                LocalDate dateFin = rs.getDate("dateFin").toLocalDate();
+                String status = rs.getString("statut");
+                int dureeEngagement = rs.getInt("dureeEngagementMois");
+                statusabonnement statut = statusabonnement.valueOf(status);
+                if (dureeEngagement == 0) {
+                    AbonnementSansEngagement abonnement = new AbonnementSansEngagement(id, nomService, montantMensuel, dateDebut, dateFin, statut);
+                    abonnements.add(abonnement);
+                } else {
+                    AbonnementAvecEngagement abonnement = new AbonnementAvecEngagement(id, nomService, montantMensuel, dateDebut, dateFin, statut, dureeEngagement);
+                    abonnements.add(abonnement);
+                }
+            }
+            System.out.println("-----------------Abonnements actifs récupérés avec succès.-------------------");
+        } catch (Exception e) {
+            Logger.error(e.getMessage());
+            return new ArrayList<>();
+        }
+
+        return abonnements;
     };
 }
