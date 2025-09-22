@@ -1,8 +1,6 @@
 package model.entity;
 
 import model.enums.StatutPaiement;
-import model.enums.TypePaiement;
-
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -11,15 +9,13 @@ public class Paiement {
     private String idAbonnement;
     private LocalDate dateEcheance;
     private LocalDate datePaiement;
-    private TypePaiement typePaiement;
     private StatutPaiement statut;
 
 
-    public Paiement(String idAbonnement, LocalDate dateEcheance, TypePaiement typePaiement, StatutPaiement statut) {
+    public Paiement(String idAbonnement, LocalDate dateEcheance, StatutPaiement statut) {
         this.idPaiement = UUID.randomUUID().toString();
         this.idAbonnement = idAbonnement;
         this.dateEcheance = dateEcheance;
-        this.typePaiement = typePaiement;
         this.statut = statut;
     }
 
@@ -53,14 +49,6 @@ public class Paiement {
 
     public void setDatePaiement(LocalDate datePaiement) {
         this.datePaiement = datePaiement;
-    }
-
-    public TypePaiement getTypePaiement() {
-        return typePaiement;
-    }
-
-    public void setTypePaiement(TypePaiement typePaiement) {
-        this.typePaiement = typePaiement;
     }
 
     public StatutPaiement getStatut() {
