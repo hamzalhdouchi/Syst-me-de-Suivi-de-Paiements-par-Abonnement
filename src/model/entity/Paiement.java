@@ -11,13 +11,19 @@ public class Paiement {
     private LocalDate dateEcheance;
     private LocalDate datePaiement;
     private StatutPaiement statut;
+    private String TypePaiement;
 
 
-    public Paiement(String idAbonnement, LocalDate dateEcheance, StatutPaiement statut) {
-        this.idPaiement = UUID.randomUUID().toString();
+
+    private double montent;
+
+    public Paiement(String idAbonnement,String idPaiement, LocalDate dateEcheance, StatutPaiement statut, String TypePaiement,double montent) {
+        this.idPaiement = idPaiement;
         this.idAbonnement = idAbonnement;
         this.dateEcheance = dateEcheance;
         this.statut = statut;
+        this.TypePaiement = TypePaiement;
+        this.montent = montent;
     }
 
     public String getIdPaiement() {
@@ -40,6 +46,21 @@ public class Paiement {
         return dateEcheance;
     }
 
+    public String getTypePaiement() {
+        return TypePaiement;
+    }
+    public double getMontent() {
+        return montent;
+    }
+
+
+
+    public void setMontent(double montent) {
+        this.montent = montent;
+    }
+    public void setTypePaiement(String typePaiement) {
+        TypePaiement = typePaiement;
+    }
     public void setDateEcheance(LocalDate dateEcheance) {
         this.dateEcheance = dateEcheance;
     }
