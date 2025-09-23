@@ -42,7 +42,7 @@ src/
 - **dao/**: Data access objects for database operations via JDBC.
 - **service/**: Business logic for managing subscriptions and payments.
 - **util/**: Utility classes for date handling, formatting, and validation.
-- **ui/**: Console-based user interface and ui.menu navigation.
+- **ui/**: Console-based user interface and ui.menuPaiements navigation.
 - **ui.Main.java**: Application entry point.
 
 ## Features
@@ -74,7 +74,7 @@ src/
 
 ## Screenshots
 
-_Add screenshots of the console ui.menu, subscription list, payment list, and reports here._
+_Add screenshots of the console ui.menuPaiements, subscription list, payment list, and reports here._
 
 ---
 
