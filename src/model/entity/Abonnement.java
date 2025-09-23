@@ -1,8 +1,10 @@
 package model.entity;
 
+import model.enums.TypeAbonnement;
 import model.enums.statusabonnement;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.UUID;
 
 public abstract class Abonnement {
@@ -13,13 +15,17 @@ public abstract class Abonnement {
     protected LocalDate dateFin;
     protected statusabonnement statut;
 
-    public Abonnement(String id,String nomService, double montantMensuel, LocalDate dateDebut, LocalDate dateFin, statusabonnement statut) {
+
+    protected TypeAbonnement type;
+
+    public Abonnement(String id,String nomService, double montantMensuel, LocalDate dateDebut, LocalDate dateFin, statusabonnement statut, TypeAbonnement type) {
         this.id = UUID.randomUUID().toString();
         this.nomService = nomService;
         this.montantMensuel = montantMensuel;
         this.dateDebut = dateDebut;
         this.dateFin = dateFin;
         this.statut = statut;
+        this.type = type;
     }
 
 
@@ -49,6 +55,14 @@ public abstract class Abonnement {
 
     public LocalDate getDateDebut() {
         return dateDebut;
+    }
+
+    public TypeAbonnement getType() {
+        return type;
+    }
+
+    public void setType(TypeAbonnement type) {
+        this.type = type;
     }
 
     public void setDateDebut(LocalDate dateDebut) {

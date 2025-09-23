@@ -5,6 +5,7 @@ import dbConnection.DataBase;
 import model.entity.Abonnement;
 import model.entity.AbonnementAvecEngagement;
 import model.entity.AbonnementSansEngagement;
+import model.enums.TypeAbonnement;
 import model.enums.statusabonnement;
 import util.Logger;
 
@@ -25,7 +26,7 @@ public class AbonnementDAO implements AbonnementInterface {
     public void create(Abonnement a){
 
         a.setId( UUID.randomUUID().toString());
-        String sql = "INSERT INTO Abonnement (nomService, montantMensuel, dateDebut, dateFin, statut,dureeEngagementMois) VALUES (?, ?, ?, ?, ?,?)";
+        String sql = "INSERT INTO Abonnement (nomService, montantMensuel, dateDebut, dateFin, statut,dureeEngagementMois,typeEngagement) VALUES (?, ?, ?, ?, ?,?,?)";
         try{
             PreparedStatement pstmt = this.con.prepareStatement(sql);
              pstmt.setString(1, a.getNomService());
@@ -33,9 +34,13 @@ public class AbonnementDAO implements AbonnementInterface {
              pstmt.setDate(3, Date.valueOf(a.getDateDebut()));
              pstmt.setDate(4, Date.valueOf(a.getDateFin()));
              pstmt.setString(5, a.getStatut().toString());
-             if (a instanceof AbonnementAvecEngagement){
-                 pstmt.setInt(6, 0);
-             }
+                if (a instanceof AbonnementAvecEngagement){
+                    AbonnementAvecEngagement abonnementAvecEngagement = (AbonnementAvecEngagement) a;
+                    pstmt.setInt(6, abonnementAvecEngagement.getDureeEngagementMois());
+                    pstmt.setString(7, "AVEC_ENGAGEMENT");
+                } else {
+                    pstmt.setString(7, "SANS_ENGAGEMENT");
+                }
              pstmt.executeUpdate();
 
             System.out.println("-----------------Abonnement créé avec succès.-------------------");
@@ -43,12 +48,12 @@ public class AbonnementDAO implements AbonnementInterface {
             Logger.error(e.getMessage());
         }
     };
-    public Optional<Abonnement> findById() {
+    public Optional<Abonnement> findById(String id) {
         try {
             List<Abonnement> abonnements = findAll();
 
             Abonnement abonnement = abonnements.stream()
-                    .filter(a -> a.getId().isEmpty())
+                    .filter(a -> a.getId().equals(id))
                     .findFirst()
                     .orElseThrow(() ->{
                        Exception error =   new Exception("Abonnement non trouvé");
@@ -78,12 +83,13 @@ public class AbonnementDAO implements AbonnementInterface {
                 LocalDate dateFin = rs.getDate("dateFin").toLocalDate();
                 String status = rs.getString("statut");
                 int dureeEngagement = rs.getInt("dureeEngagementMois");
+                TypeAbonnement type = TypeAbonnement.valueOf(rs.getString("typeEngagement"));
                 statusabonnement statut = statusabonnement.valueOf(status);
                 if (dureeEngagement == 0) {
-                    AbonnementSansEngagement abonnement = new AbonnementSansEngagement(id, nomService, montantMensuel, dateDebut, dateFin, statut);
+                    AbonnementSansEngagement abonnement = new AbonnementSansEngagement(id, nomService, montantMensuel, dateDebut, dateFin, statut, type);
                     abonnements.add(abonnement);
                 } else {
-                    AbonnementAvecEngagement abonnement = new AbonnementAvecEngagement(id, nomService, montantMensuel, dateDebut, dateFin, statut, dureeEngagement);
+                    AbonnementAvecEngagement abonnement = new AbonnementAvecEngagement(id, nomService, montantMensuel, dateDebut, dateFin, statut, dureeEngagement, type);
                     abonnements.add(abonnement);
                 }
             }
