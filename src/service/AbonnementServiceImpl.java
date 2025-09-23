@@ -41,5 +41,17 @@ public class AbonnementServiceImpl {
 
     }
 
-
+    public void findById(String id){
+        AbonnementDAO abonnementDAO = new AbonnementDAO();
+        try {
+            Abonnement abonnement = abonnementDAO.findById(id).orElse(null);
+            if (abonnement == null) {
+                System.out.println("Abonnement trouvé : " + abonnement.getNomService());
+            } else {
+                System.out.println("Abonnement non trouvé avec l'ID : " + id);
+            }
+        } catch (Exception e) {
+            Logger.error(e.getMessage());
+        }
+    }
 }
