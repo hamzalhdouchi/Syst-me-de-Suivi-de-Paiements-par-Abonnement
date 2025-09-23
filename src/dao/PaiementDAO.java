@@ -3,9 +3,13 @@ package dao;
 import dbConnection.DataBase;
 import model.entity.Paiement;
 import util.Logger;
+import model.enums.StatutPaiement;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PaiementDAO {
@@ -26,7 +30,7 @@ public class PaiementDAO {
                 stmt.setObject(4,p.getDatePaiement());
                 stmt.setObject(5,p.getDateEcheance());
                 stmt.setString(6,p.getStatut().toString());
-                stmt.setString(7,p.getTypePaiement();
+                stmt.setString(7,p.getTypePaiement().toString());
                 stmt.executeUpdate();
                 System.out.println("--------------Paiement ajouté avec succès !--------------");
             } catch (Exception e) {
@@ -34,14 +38,46 @@ public class PaiementDAO {
             }
 
     };
-    Paiement findById(String idPaiement){
-        return null;
+    Paiement findById(String idPaiement) throws Exception {
+        List<Paiement> paiements = findAll();
+
+        return paiements.stream()
+                .filter(p -> p.getIdPaiement().equals(idPaiement))
+                .findFirst()
+                .orElseThrow(() ->{
+                    Exception error =   new Exception("Abonnement non trouvé");
+                    Logger.error(error.getMessage());
+                    return error;
+               });
     };
-    List<Paiement> findByAbonnement(String idAbonnement){};
-    List<Paiement> findAll(){
-        return java.util.Collections.emptyList();
+
+   List<Paiement> findAll(){
+        List<Paiement> paiements = new ArrayList<>();
+        String sql = "SELECT * FROM paiement";
+        try {
+            PreparedStatement stmt = this.connection.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+
+            while(rs.next()){
+                Paiement p = new Paiement(
+                        rs.getString("idAbonnement"),
+                        rs.getString("idPaiement"),
+                        rs.getDate("dateEcheance").toLocalDate(),
+                        StatutPaiement.valueOf(rs.getString("statut")),
+                        rs.getString("typePaiement"),
+                        rs.getDouble("montant")
+                );
+                paiements.add(p);
+            }
+            return paiements;
+        } catch (Exception e) {
+            Logger.error(e.getMessage());
+        }
+        return paiements;
     };
     void update(Paiement p){};
     void delete(String idPaiement){};
-    List<Paiement> findUnpaidByAbonnement(String idAbonnement){};
+    List<Paiement> findUnpaidByAbonnement(String idAbonnement){
+        return null;
+    };
 }
