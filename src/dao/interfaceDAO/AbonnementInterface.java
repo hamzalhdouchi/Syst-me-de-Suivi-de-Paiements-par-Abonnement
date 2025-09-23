@@ -12,4 +12,5 @@ public interface AbonnementInterface {
     public List<Abonnement> findAll();
     public void update(Abonnement a, int dureeEngagementMois);
     public List<Abonnement> findActiveSubscriptions();
+    public void canseldAbonnement(String idAbonnement);
 }

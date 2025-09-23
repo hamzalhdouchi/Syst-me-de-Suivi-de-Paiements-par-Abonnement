@@ -4,15 +4,19 @@ import dao.PaiementDAO;
 import model.entity.Paiement;
 import model.enums.StatutPaiement;
 import util.DateVerfied;
+import util.UuidGen;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Locale;
 
 public class PaiementServiceImpl {
 
         public void CreerPaiement(Paiement paiement) {
-            LocalDate Date = DateVerfied.datefinSansEng(paiement.getDatePaiement());
-            StatutPaiement statutPaiement = paiement.getStatut();
+            LocalDate Date = DateVerfied.DateNowVirfied(null);
+            LocalDate dateEcheance = DateVerfied.datefinSansEng(Date);
+            StatutPaiement statutPaiement = StatutPaiement.PAYE;
+            String idPaiement = UuidGen.codeGen();
             if (paiement.getIdPaiement() == null) {
                 System.out.println("Paiement ID is null, cannot create Paiement.");
                 return;
@@ -22,7 +26,7 @@ public class PaiementServiceImpl {
                 return;
             }
             PaiementDAO p;
-            Paiement newPaiement = new Paiement(paiement.getIdAbonnement(), paiement.getIdPaiement(), paiement.getDateEcheance(), Date, statutPaiement, paiement.getTypePaiement(), paiement.getMontent());
+            Paiement newPaiement = new Paiement(paiement.getIdAbonnement(), idPaiement, dateEcheance, Date, statutPaiement, paiement.getTypePaiement(), paiement.getMontent());
             p = new PaiementDAO();
             p.create(newPaiement);
 

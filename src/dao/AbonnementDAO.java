@@ -88,10 +88,10 @@ public class AbonnementDAO implements AbonnementInterface {
                 statusabonnement statut = statusabonnement.valueOf(status);
                 StatutPaiement statutPaiement = StatutPaiement.valueOf(rs.getString("statutPaiement"));
                 if (dureeEngagement == 0) {
-                    AbonnementSansEngagement abonnement = new AbonnementSansEngagement(id, nomService, montantMensuel, dateDebut, dateFin, statut, type,statutPaiement);
+                    AbonnementSansEngagement abonnement = new AbonnementSansEngagement(id, nomService, montantMensuel, dateDebut, dateFin, statut, type);
                     abonnements.add(abonnement);
                 } else {
-                    AbonnementAvecEngagement abonnement = new AbonnementAvecEngagement(id, nomService, montantMensuel, dateDebut, dateFin, statut, dureeEngagement, type, statutPaiement);
+                    AbonnementAvecEngagement abonnement = new AbonnementAvecEngagement(id, nomService, montantMensuel, dateDebut, dateFin, statut, dureeEngagement, type);
                     abonnements.add(abonnement);
                 }
             }
@@ -141,5 +141,18 @@ public class AbonnementDAO implements AbonnementInterface {
         List<Abonnement> newAbonnements = new ArrayList<>();
         newAbonnements =  abonnements.stream().filter(a -> a.getStatut() == statusabonnement.ACTIVE).collect(Collectors.toList());
         return newAbonnements;
+    };
+
+    public void canseldAbonnement(String idAbonnement){
+        String sql = "UPDATE abonnement SET statut = ? WHERE id = ?";
+        try {
+            PreparedStatement stmt = this.con.prepareStatement(sql);
+            stmt.setString(1, statusabonnement.RESILIE.toString());
+            stmt.setString(2, idAbonnement);
+            stmt.executeUpdate();
+            System.out.println("-----------------Abonnement annulé avec succès.-------------------");
+        }catch (Exception e){
+            Logger.error(e.getMessage());
+        }
     };
 }
