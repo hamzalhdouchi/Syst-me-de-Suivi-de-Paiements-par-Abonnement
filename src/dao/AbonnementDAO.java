@@ -5,6 +5,7 @@ import dbConnection.DataBase;
 import model.entity.Abonnement;
 import model.entity.AbonnementAvecEngagement;
 import model.entity.AbonnementSansEngagement;
+import model.enums.StatutPaiement;
 import model.enums.TypeAbonnement;
 import model.enums.statusabonnement;
 import util.Logger;
@@ -26,7 +27,7 @@ public class AbonnementDAO implements AbonnementInterface {
     public void create(Abonnement a){
 
         a.setId( UUID.randomUUID().toString());
-        String sql = "INSERT INTO Abonnement (nomService, montantMensuel, dateDebut, dateFin, statut,dureeEngagementMois,typeEngagement) VALUES (?, ?, ?, ?, ?,?,?)";
+        String sql = "INSERT INTO Abonnement (nomService, montantMensuel, dateDebut, dateFin, statut,dureeEngagementMois,typeEngagement,statutPaiement) VALUES (?, ?, ?, ?, ?,?,?,?)";
         try{
             PreparedStatement pstmt = this.con.prepareStatement(sql);
              pstmt.setString(1, a.getNomService());
@@ -41,6 +42,7 @@ public class AbonnementDAO implements AbonnementInterface {
                 } else {
                     pstmt.setString(7, "SANS_ENGAGEMENT");
                 }
+                pstmt.setString(8, a.getStatutPaiement().toString());
              pstmt.executeUpdate();
 
             System.out.println("-----------------Abonnement créé avec succès.-------------------");
@@ -81,15 +83,16 @@ public class AbonnementDAO implements AbonnementInterface {
                 double montantMensuel = rs.getDouble("montantMensuel");
                 LocalDate dateDebut = rs.getDate("dateDebut").toLocalDate();
                 LocalDate dateFin = rs.getDate("dateFin").toLocalDate();
-                String status = rs.getString("statut");
+                String status = rs.getString("statutAbonnement");
                 int dureeEngagement = rs.getInt("dureeEngagementMois");
                 TypeAbonnement type = TypeAbonnement.valueOf(rs.getString("typeEngagement"));
                 statusabonnement statut = statusabonnement.valueOf(status);
+                StatutPaiement statutPaiement = StatutPaiement.valueOf(rs.getString("statutPaiement"));
                 if (dureeEngagement == 0) {
-                    AbonnementSansEngagement abonnement = new AbonnementSansEngagement(id, nomService, montantMensuel, dateDebut, dateFin, statut, type);
+                    AbonnementSansEngagement abonnement = new AbonnementSansEngagement(id, nomService, montantMensuel, dateDebut, dateFin, statut, type,statutPaiement);
                     abonnements.add(abonnement);
                 } else {
-                    AbonnementAvecEngagement abonnement = new AbonnementAvecEngagement(id, nomService, montantMensuel, dateDebut, dateFin, statut, dureeEngagement, type);
+                    AbonnementAvecEngagement abonnement = new AbonnementAvecEngagement(id, nomService, montantMensuel, dateDebut, dateFin, statut, dureeEngagement, type, statutPaiement);
                     abonnements.add(abonnement);
                 }
             }
@@ -102,9 +105,9 @@ public class AbonnementDAO implements AbonnementInterface {
         return abonnements;
     }
 
-    public void update(Abonnement a, String dureeEngagementMois){
+    public void update(Abonnement a, int dureeEngagementMois){
         if (a instanceof AbonnementAvecEngagement){
-            String  sql = "UPDATE abonnement (nomService ,statut, dureeEngagementMois) VALUE (?,?,?) where id = ?";
+            String  sql = "UPDATE abonnement (nomService ,statutAbonnement, dureeEngagementMois,statutPaiement) VALUE (?,?,?,?) where id = ?";
         }
         String sql = "UPDATE abonnement (nomService ,statut) VALUE (?,?) where id = ?";
         try {
@@ -113,8 +116,9 @@ public class AbonnementDAO implements AbonnementInterface {
             stmt.setString(2, a.getStatut().toString());
             stmt.setString(3, a.getId());
             if(a instanceof AbonnementAvecEngagement){
-                stmt.setInt(4, Integer.parseInt(dureeEngagementMois));
+                stmt.setInt(4, dureeEngagementMois);
             }
+            stmt.setString(5, a.getStatutPaiement().toString());
             stmt.executeUpdate();
             System.out.println("-----------------Abonnement mis à jour avec succès.-------------------");
         }catch (Exception e){

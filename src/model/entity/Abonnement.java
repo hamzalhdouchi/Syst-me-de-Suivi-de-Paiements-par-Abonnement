@@ -1,5 +1,6 @@
 package model.entity;
 
+import model.enums.StatutPaiement;
 import model.enums.TypeAbonnement;
 import model.enums.statusabonnement;
 
@@ -13,19 +14,37 @@ public abstract class Abonnement {
     protected double montantMensuel;
     protected LocalDate dateDebut;
     protected LocalDate dateFin;
-    protected statusabonnement statut;
+    protected statusabonnement statutAbonnement;
 
+    public StatutPaiement getStatutPaiement() {
+        return statutPaiement;
+    }
+
+    public void setStatutPaiement(StatutPaiement statutPaiement) {
+        this.statutPaiement = statutPaiement;
+    }
+
+    protected StatutPaiement statutPaiement;
+
+    public statusabonnement getStatutAbonnement() {
+        return statutAbonnement;
+    }
+
+    public void setStatutAbonnement(statusabonnement statutAbonnement) {
+        this.statutAbonnement = statutAbonnement;
+    }
 
     protected TypeAbonnement type;
 
-    public Abonnement(String id,String nomService, double montantMensuel, LocalDate dateDebut, LocalDate dateFin, statusabonnement statut, TypeAbonnement type) {
+    public Abonnement(String id,String nomService, double montantMensuel, LocalDate dateDebut, LocalDate dateFin, statusabonnement statut, TypeAbonnement type, StatutPaiement statutPaiement) {
         this.id = UUID.randomUUID().toString();
         this.nomService = nomService;
         this.montantMensuel = montantMensuel;
         this.dateDebut = dateDebut;
         this.dateFin = dateFin;
-        this.statut = statut;
+        this.statutAbonnement = statut;
         this.type = type;
+        this.statutPaiement = statutPaiement;
     }
 
 
@@ -78,11 +97,11 @@ public abstract class Abonnement {
     }
 
     public statusabonnement getStatut() {
-        return statut;
+        return statutAbonnement;
     }
 
     public void setStatut(statusabonnement statut) {
-        this.statut = statut;
+        this.statutAbonnement = statut;
     }
 
 

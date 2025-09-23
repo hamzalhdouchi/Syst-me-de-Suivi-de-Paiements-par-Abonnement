@@ -8,8 +8,8 @@ import java.util.Optional;
 public interface AbonnementInterface {
 
     public void create(Abonnement a);
-    public Optional<Abonnement> findById();
+    public Optional<Abonnement> findById(String id);
     public List<Abonnement> findAll();
-    public void update(Abonnement a);
+    public void update(Abonnement a, int dureeEngagementMois);
     public List<Abonnement> findActiveSubscriptions();
 }
