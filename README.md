@@ -35,7 +35,7 @@ src/
 │   └── ValidationUtils.java
 ├── ui/
 │   └── ConsoleMenu.java
-└── Main.java
+└── ui.Main.java
 ```
 
 - **entity/**: Domain models for subscriptions and payments.
@@ -43,7 +43,7 @@ src/
 - **service/**: Business logic for managing subscriptions and payments.
 - **util/**: Utility classes for date handling, formatting, and validation.
 - **ui/**: Console-based user interface and menu navigation.
-- **Main.java**: Application entry point.
+- **ui.Main.java**: Application entry point.
 
 ## Features
 
@@ -70,7 +70,7 @@ src/
 
 1. Clone the repository.
 2. Configure your database connection in the DAO classes.
-3. Build and run the application from `Main.java`.
+3. Build and run the application from `ui.Main.java`.
 
 ## Screenshots
 
