@@ -78,7 +78,21 @@ public class PaiementDAO {
         return paiements;
     };
     void update(Paiement p){};
-    void delete(String idPaiement){};
+    void delete(String idPaiement){
+        String sql = "DELETE FROM paiement WHERE id = ?";
+        try{
+            PreparedStatement stmt = this.connection.prepareStatement(sql);
+            stmt.setString(1,idPaiement);
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("--------------Paiement supprimé avec succès !--------------");
+            } else {
+                System.out.println("Aucun paiement trouvé avec l'ID spécifié.");
+            }
+        } catch (Exception e) {
+            Logger.error(e.getMessage());
+        }
+    };
     List<Paiement> findUnpaidByAbonnement(String idAbonnement) throws Exception {
         List<Paiement> paiments = findAll();
         List<Paiement> paiementsNonPaye = new ArrayList<>();
