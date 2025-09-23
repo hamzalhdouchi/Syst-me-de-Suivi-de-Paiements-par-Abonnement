@@ -10,7 +10,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PaiementDAO {
 
@@ -77,7 +79,16 @@ public class PaiementDAO {
     };
     void update(Paiement p){};
     void delete(String idPaiement){};
-    List<Paiement> findUnpaidByAbonnement(String idAbonnement){
-        return null;
-    };
+    List<Paiement> findUnpaidByAbonnement(String idAbonnement) throws Exception {
+        List<Paiement> paiments = findAll();
+        List<Paiement> paiementsNonPaye = new ArrayList<>();
+        paiementsNonPaye = paiments.stream().filter((p) -> p.getIdAbonnement().equals(idAbonnement))
+                .filter((p) -> p.getStatut() == StatutPaiement.NON_PAYE).collect(Collectors.toList());
+        if(paiementsNonPaye.isEmpty()){
+            String error = "Aucun paiement non payé trouvé pour cet abonnement.";
+            Logger.error(error);
+            throw new Exception(error);
+        }
+        return paiementsNonPaye;
+    }
 }
