@@ -15,11 +15,8 @@ import java.util.stream.Collectors;
 
 public class PaiementDAO implements PaiementInterface {
 
-    private Connection connection;
+    private Connection connection = DataBase.getInstance().getConnection();
 
-    public PaiementDAO() {
-        this.connection = DataBase.getInstance().getConnection();
-    }
 
     public void create(Paiement p){
             String sql = "INSERT INTO paiement (id, idAbonnement, montant, datePaiement, dateEcheance, statut, TypePaiement) VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -64,6 +61,7 @@ public class PaiementDAO implements PaiementInterface {
                         rs.getString("idAbonnement"),
                         rs.getString("idPaiement"),
                         rs.getDate("dateEcheance").toLocalDate(),
+                        rs.getDate("datePaiement").toLocalDate(),
                         StatutPaiement.valueOf(rs.getString("statut")),
                         rs.getString("typePaiement"),
                         rs.getDouble("montant")

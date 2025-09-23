@@ -9,8 +9,8 @@ import java.time.LocalDate;
 public class AbonnementAvecEngagement extends Abonnement {
     private int dureeEngagementMois = 0;
 
-    public AbonnementAvecEngagement(String id, String nomService, double montantMensuel, LocalDate dateDebut, LocalDate dateFin, statusabonnement statut , int dureeEngagement , TypeAbonnement type ,StatutPaiement statutPaiement) {
-        super( id,nomService, montantMensuel, dateDebut, dateFin, statut, type, statutPaiement);
+    public AbonnementAvecEngagement(String id, String nomService, double montantMensuel, LocalDate dateDebut, LocalDate dateFin, statusabonnement statut , int dureeEngagement , TypeAbonnement type ) {
+        super( id,nomService, montantMensuel, dateDebut, dateFin, statut, type);
         this.dureeEngagementMois = dureeEngagement;
     }
     public int getDureeEngagementMois() {

@@ -16,13 +16,7 @@ public abstract class Abonnement {
     protected LocalDate dateFin;
     protected statusabonnement statutAbonnement;
 
-    public StatutPaiement getStatutPaiement() {
-        return statutPaiement;
-    }
 
-    public void setStatutPaiement(StatutPaiement statutPaiement) {
-        this.statutPaiement = statutPaiement;
-    }
 
     protected StatutPaiement statutPaiement;
 
@@ -36,7 +30,7 @@ public abstract class Abonnement {
 
     protected TypeAbonnement type;
 
-    public Abonnement(String id,String nomService, double montantMensuel, LocalDate dateDebut, LocalDate dateFin, statusabonnement statut, TypeAbonnement type, StatutPaiement statutPaiement) {
+    public Abonnement(String id,String nomService, double montantMensuel, LocalDate dateDebut, LocalDate dateFin, statusabonnement statut, TypeAbonnement type) {
         this.id = UUID.randomUUID().toString();
         this.nomService = nomService;
         this.montantMensuel = montantMensuel;
@@ -44,7 +38,6 @@ public abstract class Abonnement {
         this.dateFin = dateFin;
         this.statutAbonnement = statut;
         this.type = type;
-        this.statutPaiement = statutPaiement;
     }
 
 

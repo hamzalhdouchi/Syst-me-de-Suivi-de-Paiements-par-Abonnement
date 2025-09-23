@@ -26,4 +26,9 @@ public class DateVerfied {
         LocalDate newDate = dateFin.plusMonths(dureeEngagement);
         return newDate;
     };
+
+    public static LocalDate dateNow( ) {
+        LocalDate now = LocalDate.now();
+        return now;
+    }
 }

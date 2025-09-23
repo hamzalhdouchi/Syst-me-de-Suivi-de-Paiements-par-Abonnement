@@ -27,7 +27,7 @@ public class AbonnementDAO implements AbonnementInterface {
     public void create(Abonnement a){
 
         a.setId( UUID.randomUUID().toString());
-        String sql = "INSERT INTO Abonnement (nomService, montantMensuel, dateDebut, dateFin, statut,dureeEngagementMois,typeEngagement,statutPaiement) VALUES (?, ?, ?, ?, ?,?,?,?)";
+        String sql = "INSERT INTO Abonnement (nomService, montantMensuel, dateDebut, dateFin, statut,dureeEngagementMois,typeEngagement) VALUES (?, ?, ?, ?, ?,?,?)";
         try{
             PreparedStatement pstmt = this.con.prepareStatement(sql);
              pstmt.setString(1, a.getNomService());
@@ -42,7 +42,6 @@ public class AbonnementDAO implements AbonnementInterface {
                 } else {
                     pstmt.setString(7, "SANS_ENGAGEMENT");
                 }
-                pstmt.setString(8, a.getStatutPaiement().toString());
              pstmt.executeUpdate();
 
             System.out.println("-----------------Abonnement créé avec succès.-------------------");
@@ -107,7 +106,7 @@ public class AbonnementDAO implements AbonnementInterface {
 
     public void update(Abonnement a, int dureeEngagementMois){
         if (a instanceof AbonnementAvecEngagement){
-            String  sql = "UPDATE abonnement (nomService ,statutAbonnement, dureeEngagementMois,statutPaiement) VALUE (?,?,?,?) where id = ?";
+            String  sql = "UPDATE abonnement (nomService ,statutAbonnement, dureeEngagementMois) VALUE (?,?,?) where id = ?";
         }
         String sql = "UPDATE abonnement (nomService ,statut) VALUE (?,?) where id = ?";
         try {
@@ -118,7 +117,6 @@ public class AbonnementDAO implements AbonnementInterface {
             if(a instanceof AbonnementAvecEngagement){
                 stmt.setInt(4, dureeEngagementMois);
             }
-            stmt.setString(5, a.getStatutPaiement().toString());
             stmt.executeUpdate();
             System.out.println("-----------------Abonnement mis à jour avec succès.-------------------");
         }catch (Exception e){

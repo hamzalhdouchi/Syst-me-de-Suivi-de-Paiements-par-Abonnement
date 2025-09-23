@@ -31,11 +31,11 @@ public class AbonnementServiceImpl {
 
         if (abonnement.getType() == TypeAbonnement.SANS_ENGAGEMENT){
             LocalDate dateFin = DateVerfied.datefinSansEng(abonnement.getDateFin());
-            Abonnement abonnement1 = new AbonnementSansEngagement(abonnement.getId(),abonnement.getNomService(), abonnement.getMontantMensuel(), date,dateFin, abonnement.getStatut(), abonnement.getType(), abonnement.getStatutPaiement());
+            Abonnement abonnement1 = new AbonnementSansEngagement(abonnement.getId(),abonnement.getNomService(), abonnement.getMontantMensuel(), date,dateFin, abonnement.getStatut(), abonnement.getType());
             abonnementDAO.create(abonnement1);
         } else if (abonnement.getType() == TypeAbonnement.AVEC_ENGAGEMENT && dureeEngagementMois > 3) {
             LocalDate DateFin = DateVerfied.dateFinAvecEng(abonnement.getDateFin(),dureeEngagementMois);
-            Abonnement abonnement1 = new AbonnementAvecEngagement(abonnement.getId(),abonnement.getNomService(), abonnement.getMontantMensuel(), date,DateFin, abonnement.getStatut(),  dureeEngagementMois,abonnement.getType(), abonnement.getStatutPaiement());
+            Abonnement abonnement1 = new AbonnementAvecEngagement(abonnement.getId(),abonnement.getNomService(), abonnement.getMontantMensuel(), date,DateFin, abonnement.getStatut(),  dureeEngagementMois,abonnement.getType());
             abonnementDAO.create(abonnement1);
         }
 
@@ -75,11 +75,11 @@ public class AbonnementServiceImpl {
         LocalDate date =  DateVerfied.DateNowVirfied(abonnement.getDateDebut());
 
         if (abonnement.getType() == TypeAbonnement.SANS_ENGAGEMENT){
-            Abonnement abonnement1 = new AbonnementSansEngagement(abonnement.getId(),abonnement.getNomService(), abonnement.getMontantMensuel(), null ,null, abonnement.getStatut(), abonnement.getType(),abonnement.getStatutPaiement());
+            Abonnement abonnement1 = new AbonnementSansEngagement(abonnement.getId(),abonnement.getNomService(), abonnement.getMontantMensuel(), null ,null, abonnement.getStatut(), abonnement.getType());
             abonnementDAO.update(abonnement1,0);
         } else if (abonnement.getType() == TypeAbonnement.AVEC_ENGAGEMENT && dureeEngagementMois > 3) {
             LocalDate DateFin = DateVerfied.dateFinAvecEng(abonnement.getDateFin(),dureeEngagementMois);
-            Abonnement abonnement1 = new AbonnementAvecEngagement(abonnement.getId(),abonnement.getNomService(), abonnement.getMontantMensuel(), null,DateFin, abonnement.getStatut(), dureeEngagementMois, abonnement.getType(),abonnement.getStatutPaiement());
+            Abonnement abonnement1 = new AbonnementAvecEngagement(abonnement.getId(),abonnement.getNomService(), abonnement.getMontantMensuel(), null,DateFin, abonnement.getStatut(), dureeEngagementMois, abonnement.getType());
             abonnementDAO.update(abonnement1,dureeEngagementMois);
         }
     };

@@ -17,10 +17,11 @@ public class Paiement {
 
     private double montent;
 
-    public Paiement(String idAbonnement,String idPaiement, LocalDate dateEcheance, StatutPaiement statut, String TypePaiement,double montent) {
+    public Paiement(String idAbonnement,String idPaiement, LocalDate dateEcheance, LocalDate datePaiement,StatutPaiement statut, String TypePaiement,double montent) {
         this.idPaiement = idPaiement;
         this.idAbonnement = idAbonnement;
         this.dateEcheance = dateEcheance;
+        this.datePaiement = datePaiement;
         this.statut = statut;
         this.TypePaiement = TypePaiement;
         this.montent = montent;
