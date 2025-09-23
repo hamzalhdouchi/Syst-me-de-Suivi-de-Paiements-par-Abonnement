@@ -77,7 +77,24 @@ public class PaiementDAO {
         }
         return paiements;
     };
-    void update(Paiement p){};
+    void update(Paiement p){
+        String sql = "UPDATE paiement SET  montant = ?,  statut = ?, TypePaiement = ? WHERE id = ?";
+        try{
+            PreparedStatement stmt = this.connection.prepareStatement(sql);
+            stmt.setString(1,p.getIdAbonnement());
+            stmt.setDouble(2,p.getMontent());
+            stmt.setString(3,p.getStatut().toString());
+            stmt.setString(4,p.getTypePaiement().toString());
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("--------------Paiement mis à jour avec succès !--------------");
+            } else {
+                System.out.println("Aucun paiement trouvé avec l'ID spécifié.");
+            }
+        } catch (Exception e) {
+            Logger.error(e.getMessage());
+        }
+    };
     void delete(String idPaiement){
         String sql = "DELETE FROM paiement WHERE id = ?";
         try{
