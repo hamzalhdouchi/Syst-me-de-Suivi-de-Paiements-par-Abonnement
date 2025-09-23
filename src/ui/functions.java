@@ -144,5 +144,10 @@ public class functions {
         paiementService.update(p);
     }
 
-
+    public static void deletePaiement(){
+        System.out.println("\n------------------DELETE PAIEMENT------------------");
+        System.out.println("Entre l'ID de Paiement");
+        String id = sc.nextLine();
+        paiementService.delete(id);
+    }
 }
