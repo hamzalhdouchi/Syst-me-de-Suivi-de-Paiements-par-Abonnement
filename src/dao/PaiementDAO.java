@@ -1,5 +1,6 @@
 package dao;
 
+import dao.interfaceDAO.PaiementInterface;
 import dbConnection.DataBase;
 import model.entity.Paiement;
 import util.Logger;
@@ -8,13 +9,11 @@ import model.enums.StatutPaiement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class PaiementDAO {
+public class PaiementDAO implements PaiementInterface {
 
     private Connection connection;
 
@@ -22,7 +21,7 @@ public class PaiementDAO {
         this.connection = DataBase.getInstance().getConnection();
     }
 
-    void create(Paiement p){
+    public void create(Paiement p){
             String sql = "INSERT INTO paiement (id, idAbonnement, montant, datePaiement, dateEcheance, statut, TypePaiement) VALUES (?, ?, ?, ?, ?, ?, ?)";
             try{
                 PreparedStatement stmt = this.connection.prepareStatement(sql);
@@ -40,7 +39,7 @@ public class PaiementDAO {
             }
 
     };
-    Paiement findById(String idPaiement) throws Exception {
+    public Paiement findById(String idPaiement) throws Exception {
         List<Paiement> paiements = findAll();
 
         return paiements.stream()
@@ -53,7 +52,7 @@ public class PaiementDAO {
                });
     };
 
-   List<Paiement> findAll(){
+   public List<Paiement> findAll(){
         List<Paiement> paiements = new ArrayList<>();
         String sql = "SELECT * FROM paiement";
         try {
@@ -77,7 +76,7 @@ public class PaiementDAO {
         }
         return paiements;
     };
-    void update(Paiement p){
+    public void update(Paiement p){
         String sql = "UPDATE paiement SET  montant = ?,  statut = ?, TypePaiement = ? WHERE id = ?";
         try{
             PreparedStatement stmt = this.connection.prepareStatement(sql);
@@ -95,7 +94,7 @@ public class PaiementDAO {
             Logger.error(e.getMessage());
         }
     };
-    void delete(String idPaiement){
+    public void delete(String idPaiement){
         String sql = "DELETE FROM paiement WHERE id = ?";
         try{
             PreparedStatement stmt = this.connection.prepareStatement(sql);
@@ -110,7 +109,7 @@ public class PaiementDAO {
             Logger.error(e.getMessage());
         }
     };
-    List<Paiement> findUnpaidByAbonnement(String idAbonnement) throws Exception {
+    public List<Paiement> findUnpaidByAbonnement(String idAbonnement) throws Exception {
         List<Paiement> paiments = findAll();
         List<Paiement> paiementsNonPaye = new ArrayList<>();
         paiementsNonPaye = paiments.stream().filter((p) -> p.getIdAbonnement().equals(idAbonnement))

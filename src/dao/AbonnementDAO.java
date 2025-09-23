@@ -1,6 +1,6 @@
 package dao;
 
-import com.mysql.cj.xdevapi.AddStatement;
+import dao.interfaceDAO.AbonnementInterface;
 import dbConnection.DataBase;
 import model.entity.Abonnement;
 import model.entity.AbonnementAvecEngagement;
@@ -14,10 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
-import static com.sun.xml.internal.ws.api.model.wsdl.WSDLBoundOperation.ANONYMOUS.optional;
-
-public class AbonnementDAO {
+public class AbonnementDAO implements AbonnementInterface {
 
     private Connection con;
     public AbonnementDAO() {
@@ -44,7 +43,7 @@ public class AbonnementDAO {
             Logger.error(e.getMessage());
         }
     };
-    public Abonnement findById() {
+    public Optional<Abonnement> findById() {
         try {
             List<Abonnement> abonnements = findAll();
 
@@ -56,14 +55,14 @@ public class AbonnementDAO {
                         Logger.error(error.getMessage());
                         return error;
                     });
-            return abonnement;
+            return Optional.of(abonnement);
 
         } catch (Exception e) {
             Logger.error(e.getMessage());
-            return null;
+            return Optional.empty();
         }
     }
-    List<Abonnement> findAll() {
+    public List<Abonnement> findAll() {
         List<Abonnement> abonnements = new ArrayList<>();
         String SQL = "SELECT * FROM Abonnement";
 
@@ -97,7 +96,7 @@ public class AbonnementDAO {
         return abonnements;
     }
 
-    void update(Abonnement a){
+    public void update(Abonnement a){
         String sql = "UPDATE abonnement (nomService ,statut) VALUE (?,?) where id = ?";
         try {
             PreparedStatement stmt = this.con.prepareStatement(sql);
@@ -111,48 +110,22 @@ public class AbonnementDAO {
         }
 
     };
-    void delete(Abonnement a){
+    public void delete(String idAbonnement){
         String sql = "DELETE FROM abonnement where id = ?";
         try {
             PreparedStatement stmt = this.con.prepareStatement(sql);
-            stmt.setString(1, a.getId());
+            stmt.setString(1, idAbonnement);
             stmt.executeUpdate();
             System.out.println("-----------------Abonnement supprimé avec succès.-------------------");
         }catch (Exception e){
             Logger.error(e.getMessage());
         }
     };
-    List<Abonnement> findActiveSubscriptions(){
+    public List<Abonnement> findActiveSubscriptions(){
         List<Abonnement> abonnements = new ArrayList<>();
-        String SQL = "SELECT * FROM Abonnement WHERE statut = 'ACTIF'";
-
-        try {
-            PreparedStatement stmt = this.con.prepareStatement(SQL);
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                String id = rs.getString("id");
-                String nomService = rs.getString("nomService");
-                double montantMensuel = rs.getDouble("montantMensuel");
-                LocalDate dateDebut = rs.getDate("dateDebut").toLocalDate();
-                LocalDate dateFin = rs.getDate("dateFin").toLocalDate();
-                String status = rs.getString("statut");
-                int dureeEngagement = rs.getInt("dureeEngagementMois");
-                statusabonnement statut = statusabonnement.valueOf(status);
-                if (dureeEngagement == 0) {
-                    AbonnementSansEngagement abonnement = new AbonnementSansEngagement(id, nomService, montantMensuel, dateDebut, dateFin, statut);
-                    abonnements.add(abonnement);
-                } else {
-                    AbonnementAvecEngagement abonnement = new AbonnementAvecEngagement(id, nomService, montantMensuel, dateDebut, dateFin, statut, dureeEngagement);
-                    abonnements.add(abonnement);
-                }
-            }
-            System.out.println("-----------------Abonnements actifs récupérés avec succès.-------------------");
-        } catch (Exception e) {
-            Logger.error(e.getMessage());
-            return new ArrayList<>();
-        }
-
-        return abonnements;
+        abonnements = findAll();
+        List<Abonnement> newAbonnements = new ArrayList<>();
+        newAbonnements =  abonnements.stream().filter(a -> a.getStatut() == statusabonnement.ACTIVE).collect(Collectors.toList());
+        return newAbonnements;
     };
 }
