@@ -102,13 +102,19 @@ public class AbonnementDAO implements AbonnementInterface {
         return abonnements;
     }
 
-    public void update(Abonnement a){
+    public void update(Abonnement a, String dureeEngagementMois){
+        if (a instanceof AbonnementAvecEngagement){
+            String  sql = "UPDATE abonnement (nomService ,statut, dureeEngagementMois) VALUE (?,?,?) where id = ?";
+        }
         String sql = "UPDATE abonnement (nomService ,statut) VALUE (?,?) where id = ?";
         try {
             PreparedStatement stmt = this.con.prepareStatement(sql);
             stmt.setString(1, a.getNomService());
             stmt.setString(2, a.getStatut().toString());
             stmt.setString(3, a.getId());
+            if(a instanceof AbonnementAvecEngagement){
+                stmt.setInt(4, Integer.parseInt(dureeEngagementMois));
+            }
             stmt.executeUpdate();
             System.out.println("-----------------Abonnement mis à jour avec succès.-------------------");
         }catch (Exception e){

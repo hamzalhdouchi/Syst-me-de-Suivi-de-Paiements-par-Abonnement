@@ -12,10 +12,10 @@ import util.Logger;
 import java.sql.Connection;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 
 public class AbonnementServiceImpl {
 
-    private Connection connection = DataBase.getInstance().getConnection();
 
     public void createAbonnement(Abonnement abonnement,int dureeEngagementMois) {
         AbonnementDAO abonnementDAO = new AbonnementDAO();
@@ -54,4 +54,41 @@ public class AbonnementServiceImpl {
             Logger.error(e.getMessage());
         }
     }
+
+    public List<Abonnement> findAll(){
+        AbonnementDAO abonnementDAO = new AbonnementDAO();
+            List<Abonnement> abonnements = abonnementDAO.findAll();
+            return abonnements;
+    };
+
+    public void deleteById(String id){
+        AbonnementDAO abonnementDAO = new AbonnementDAO();
+         abonnementDAO.delete(id);
+    };
+
+    public void updateAbonnement(Abonnement abonnement, int dureeEngagementMois){
+        AbonnementDAO abonnementDAO = new AbonnementDAO();
+        if (abonnement.getMontantMensuel() <= 0) {
+            System.out.println("Montant mensuel must be greater than zero.");
+            return;
+        }
+        LocalDate date =  DateVerfied.DateNowVirfied(abonnement.getDateDebut());
+
+        if (abonnement.getType() == TypeAbonnement.SANS_ENGAGEMENT){
+            Abonnement abonnement1 = new AbonnementSansEngagement(abonnement.getId(),abonnement.getNomService(), abonnement.getMontantMensuel(), null ,null, abonnement.getStatut(), abonnement.getType());
+            abonnementDAO.update(abonnement1);
+        } else if (abonnement.getType() == TypeAbonnement.AVEC_ENGAGEMENT && dureeEngagementMois > 3) {
+            LocalDate DateFin = DateVerfied.dateFinAvecEng(abonnement.getDateFin(),dureeEngagementMois);
+            Abonnement abonnement1 = new AbonnementAvecEngagement(abonnement.getId(),abonnement.getNomService(), abonnement.getMontantMensuel(), null,DateFin, abonnement.getStatut(), abonnement.getType(), dureeEngagementMois);
+            abonnementDAO.update(abonnement1);
+        }
+    };
+
+    List<Abonnement> findActiveSubscriptions(){
+        AbonnementDAO abonnementDAO = new AbonnementDAO();
+        return abonnementDAO.findActiveSubscriptions();
+    }
+
+
+
 }
