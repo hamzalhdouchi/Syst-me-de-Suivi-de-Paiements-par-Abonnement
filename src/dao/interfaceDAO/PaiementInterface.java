@@ -9,5 +9,5 @@ public interface PaiementInterface {
     public Paiement findById(String id) throws  Exception;
     public void update(Paiement p);
     public void delete(String id);
-    public List<Paiement> findUnpaidByAbonnement(String idAbonnement) throws Exception;
+    public List<Paiement> findByAbonnement(String idAbonnement) throws Exception;
 }

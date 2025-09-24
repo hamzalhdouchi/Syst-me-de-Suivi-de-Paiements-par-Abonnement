@@ -18,45 +18,50 @@ public class PaiementDAO implements PaiementInterface {
     private Connection connection = DataBase.getInstance().getConnection();
 
 
-    public void create(Paiement p){
-            String sql = "INSERT INTO paiement (id, idAbonnement, montant, datePaiement, dateEcheance, statut, TypePaiement) VALUES (?, ?, ?, ?, ?, ?, ?)";
-            try{
-                PreparedStatement stmt = this.connection.prepareStatement(sql);
-                stmt.setString(1,p.getIdPaiement());
-                stmt.setString(2,p.getIdAbonnement());
-                stmt.setDouble(3,p.getMontent());
-                stmt.setObject(4,p.getDatePaiement());
-                stmt.setObject(5,p.getDateEcheance());
-                stmt.setString(6,p.getStatut().toString());
-                stmt.setString(7,p.getTypePaiement().toString());
-                stmt.executeUpdate();
-                System.out.println("--------------Paiement ajouté avec succès !--------------");
-            } catch (Exception e) {
-                Logger.error(e.getMessage());
-            }
+    public void create(Paiement p) {
+        String sql = "INSERT INTO paiement (id, idAbonnement, montant, datePaiement, dateEcheance, statut, TypePaiement) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        try {
+            PreparedStatement stmt = this.connection.prepareStatement(sql);
+            stmt.setString(1, p.getIdPaiement());
+            stmt.setString(2, p.getIdAbonnement());
+            stmt.setDouble(3, p.getMontent());
+            stmt.setObject(4, p.getDatePaiement());
+            stmt.setObject(5, p.getDateEcheance());
+            stmt.setString(6, p.getStatut().toString());
+            stmt.setString(7, p.getTypePaiement().toString());
+            stmt.executeUpdate();
+            System.out.println("--------------Paiement ajouté avec succès !--------------");
+        } catch (Exception e) {
+            Logger.error(e.getMessage());
+        }
 
-    };
+    }
+
+    ;
+
     public Paiement findById(String idPaiement) throws Exception {
         List<Paiement> paiements = findAll();
 
         return paiements.stream()
                 .filter(p -> p.getIdPaiement().equals(idPaiement))
                 .findFirst()
-                .orElseThrow(() ->{
-                    Exception error =   new Exception("Abonnement non trouvé");
+                .orElseThrow(() -> {
+                    Exception error = new Exception("Abonnement non trouvé");
                     Logger.error(error.getMessage());
                     return error;
-               });
-    };
+                });
+    }
 
-   public List<Paiement> findAll(){
+    ;
+
+    public List<Paiement> findAll() {
         List<Paiement> paiements = new ArrayList<>();
         String sql = "SELECT * FROM paiement";
         try {
             PreparedStatement stmt = this.connection.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
 
-            while(rs.next()){
+            while (rs.next()) {
                 Paiement p = new Paiement(
                         rs.getString("idAbonnement"),
                         rs.getString("idPaiement"),
@@ -73,15 +78,18 @@ public class PaiementDAO implements PaiementInterface {
             Logger.error(e.getMessage());
         }
         return paiements;
-    };
-    public void update(Paiement p){
+    }
+
+    ;
+
+    public void update(Paiement p) {
         String sql = "UPDATE paiement SET  montant = ?,  statut = ?, TypePaiement = ? WHERE id = ?";
-        try{
+        try {
             PreparedStatement stmt = this.connection.prepareStatement(sql);
-            stmt.setString(1,p.getIdAbonnement());
-            stmt.setDouble(2,p.getMontent());
-            stmt.setString(3,p.getStatut().toString());
-            stmt.setString(4,p.getTypePaiement().toString());
+            stmt.setString(1, p.getIdAbonnement());
+            stmt.setDouble(2, p.getMontent());
+            stmt.setString(3, p.getStatut().toString());
+            stmt.setString(4, p.getTypePaiement().toString());
             int rowsAffected = stmt.executeUpdate();
             if (rowsAffected > 0) {
                 System.out.println("--------------Paiement mis à jour avec succès !--------------");
@@ -91,12 +99,15 @@ public class PaiementDAO implements PaiementInterface {
         } catch (Exception e) {
             Logger.error(e.getMessage());
         }
-    };
-    public void delete(String idPaiement){
+    }
+
+    ;
+
+    public void delete(String idPaiement) {
         String sql = "DELETE FROM paiement WHERE id = ?";
-        try{
+        try {
             PreparedStatement stmt = this.connection.prepareStatement(sql);
-            stmt.setString(1,idPaiement);
+            stmt.setString(1, idPaiement);
             int rowsAffected = stmt.executeUpdate();
             if (rowsAffected > 0) {
                 System.out.println("--------------Paiement supprimé avec succès !--------------");
@@ -106,17 +117,50 @@ public class PaiementDAO implements PaiementInterface {
         } catch (Exception e) {
             Logger.error(e.getMessage());
         }
-    };
-    public List<Paiement> findUnpaidByAbonnement(String idAbonnement) throws Exception {
+    }
+
+    ;
+
+    public List<Paiement> findByAbonnement(String idAbonnement, String type) throws Exception {
         List<Paiement> paiments = findAll();
         List<Paiement> paiementsNonPaye = new ArrayList<>();
-        paiementsNonPaye = paiments.stream().filter((p) -> p.getIdAbonnement().equals(idAbonnement))
-                .filter((p) -> p.getStatut() == StatutPaiement.NON_PAYE).collect(Collectors.toList());
-        if(paiementsNonPaye.isEmpty()){
-            String error = "Aucun paiement non payé trouvé pour cet abonnement.";
-            Logger.error(error);
-            throw new Exception(error);
+        if (type.equals("TOUS")) {
+            paiementsNonPaye = paiments.stream().filter((p) -> p.getIdAbonnement().equals(idAbonnement))
+                    .collect(Collectors.toList());
+            if (paiementsNonPaye.isEmpty()) {
+                String error = "Aucun paiement trouvé pour cet abonnement.";
+                Logger.error(error);
+                throw new Exception(error);
+            }
+            return paiementsNonPaye;
+        } else if (type.equals("PAIEMENT")) {
+            paiementsNonPaye = paiments.stream().filter((p) -> p.getIdAbonnement().equals(idAbonnement))
+                    .filter((p) -> p.getStatut() == StatutPaiement.PAYE).collect(Collectors.toList());
+            if (paiementsNonPaye.isEmpty()) {
+                String error = "Aucun paiement payé trouvé pour cet abonnement.";
+                Logger.error(error);
+                throw new Exception(error);
+            }
+            return paiementsNonPaye;
+        } else if (type.equals("NON_PAIEMENT")) {
+            paiementsNonPaye = paiments.stream().filter((p) -> p.getIdAbonnement().equals(idAbonnement))
+                    .filter((p) -> p.getStatut() == StatutPaiement.NON_PAYE).collect(Collectors.toList());
+            if (paiementsNonPaye.isEmpty()) {
+                String error = "Aucun paiement non payé trouvé pour cet abonnement.";
+                Logger.error(error);
+                throw new Exception(error);
+            }
+            return paiementsNonPaye;
+        } else if (type.equals("EN_RETARD")) {
+            paiementsNonPaye = paiments.stream().filter((p) -> p.getIdAbonnement().equals(idAbonnement))
+                    .filter((p) -> p.getStatut() == StatutPaiement.NON_PAYE).collect(Collectors.toList());
+            if (paiementsNonPaye.isEmpty()) {
+                String error = "Aucun paiement non payé trouvé pour cet abonnement.";
+                Logger.error(error);
+                throw new Exception(error);
+            }
+            return paiementsNonPaye;
         }
-        return paiementsNonPaye;
+        return null;
     }
 }

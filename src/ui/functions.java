@@ -11,6 +11,7 @@ import service.AbonnementServiceImpl;
 import service.PaiementServiceImpl;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
@@ -149,5 +150,51 @@ public class functions {
         System.out.println("Entre l'ID de Paiement");
         String id = sc.nextLine();
         paiementService.delete(id);
+    }
+
+    public static void AfficherPaiementsAbonnement() throws Exception {
+        System.out.println("\n------------------Afficher les Paiements d'un Abonnement ------------------");
+        System.out.println("Entre le Status des Paiemnt tu veux trover");
+        System.out.println("1 : PAYE");
+        System.out.println("2 : NON PAYE");
+        System.out.println("3 : EN_RETARD");
+        System.out.println("4 : TOUT");
+        int choixStatus = sc.nextInt();
+        sc.nextLine();
+        String statusStr = "";
+        switch (choixStatus) {
+            case 1:
+                statusStr = "PAIEMENT";
+                break;
+
+            case 2:
+                statusStr = "NON_PAIEMENT";
+                break;
+            case 3:
+                statusStr = "EN_RETARD";
+                break;
+            case 4:
+                statusStr = "TOUS";
+            default:
+                System.out.println("Choix invalide. Veuillez réessayer.");
+        }
+        System.out.println("Entre l'ID de l'abonnement");
+        String id = sc.nextLine();
+        sc.nextLine();
+        List<Paiement>  P=  paiementService.findByAbonnement(id, statusStr);
+        for(Paiement paiement : P){
+            System.out.println("------------------------------------------------------------------");
+            System.out.println("ID: " + paiement.getIdPaiement());
+            System.out.println("Montant: " + paiement.getMontent());
+            System.out.println("Type De Paiement: " + paiement.getTypePaiement());
+            System.out.println("Date De Paiement: " + paiement.getDatePaiement());
+            System.out.println("Date DE Echeance: " + paiement.getDateEcheance());
+            System.out.println("Type de Paiement: " + paiement.getTypePaiement());
+            System.out.println("Statut: " + paiement.getStatut());
+            System.out.println("-------------------------------------------------------------------");
+
+        }
+
+
     }
 }

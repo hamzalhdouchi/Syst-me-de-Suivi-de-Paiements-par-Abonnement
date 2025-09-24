@@ -64,13 +64,13 @@ public class PaiementServiceImpl {
             paiementDAO.delete(IdPaiement);
         }
 
-    public List<Paiement> findUnpaidByAbonnement(String idAbonnement) throws Exception {
+    public List<Paiement> findByAbonnement(String idAbonnement,String type) throws Exception {
         if (idAbonnement == null) {
             System.out.println("Abonnement ID is null or empty, cannot find unpaid Paiements.");
             return null;
         }
         PaiementDAO paiementDAO = new PaiementDAO();
-        return paiementDAO.findUnpaidByAbonnement(idAbonnement);
+        return paiementDAO.findByAbonnement(idAbonnement,type);
 
     }
 }

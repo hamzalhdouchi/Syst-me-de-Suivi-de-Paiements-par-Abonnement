@@ -24,7 +24,7 @@ public class menuPaiements {
                 case 1: System.out.println(" Enregistrement d'un paiement..."); break;
                 case 2: System.out.println("Modification d'un paiement..."); break;
                 case 3: System.out.println("Suppression d'un paiement..."); break;
-                case 4: System.out.println(" des paiements d’un abonnement..."); break;
+                case 4: System.out.println("Afficher les paiements d’un abonnement..."); break;
                 case 5: System.out.println("Paiements manqués & total impayé..."); break;
                 case 6: System.out.println("Somme payée d’un abonnement..."); break;
                 case 7: System.out.println("Les 5 derniers paiements..."); break;

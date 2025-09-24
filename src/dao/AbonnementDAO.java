@@ -36,8 +36,7 @@ public class AbonnementDAO implements AbonnementInterface {
              pstmt.setDate(4, Date.valueOf(a.getDateFin()));
              pstmt.setString(5, a.getStatut().toString());
                 if (a instanceof AbonnementAvecEngagement){
-                    AbonnementAvecEngagement abonnementAvecEngagement = (AbonnementAvecEngagement) a;
-                    pstmt.setInt(6, abonnementAvecEngagement.getDureeEngagementMois());
+                    pstmt.setInt(6, ((AbonnementAvecEngagement) a).getDureeEngagementMois());
                     pstmt.setString(7, "AVEC_ENGAGEMENT");
                 } else {
                     pstmt.setString(7, "SANS_ENGAGEMENT");
