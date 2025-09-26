@@ -16,7 +16,7 @@ This Java 8 console application centralizes the management of personal and profe
 
 ## Project Structure
 
-
+```
 src/
 ├── entity/
 │   ├── Abonnement.java
@@ -37,7 +37,7 @@ src/
 │   └── ConsoleMenu.java
 └── ui.Main.java
 
-
+```
 - **entity/**: Domain models for subscriptions and payments.
 - **dao/**: Data access objects for database operations via JDBC.
 - **service/**: Business logic for managing subscriptions and payments.
@@ -104,6 +104,12 @@ _Add screenshots of the console ui.menuPaiements, subscription list, payment lis
 <img width="1792" height="409" alt="Capture d'écran 2025-09-26 103302" src="https://github.com/user-attachments/assets/bc798df9-5818-4799-8c97-56ceab5d9115" />
 **Afficher les 5 derniers paiements**
 <img width="1796" height="540" alt="Capture d'écran 2025-09-26 103334" src="https://github.com/user-attachments/assets/4628a920-31d2-4408-a006-9e74f1f40780" />
+
+
+##Class Diagramme ##
+
+<img width="1322" height="586" alt="image" src="https://github.com/user-attachments/assets/1d3fb07e-1fd9-433f-b4b1-4b2c580ac415" />
+
 
 
 
