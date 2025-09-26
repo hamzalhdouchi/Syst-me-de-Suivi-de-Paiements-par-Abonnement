@@ -1,6 +1,7 @@
 package service;
 
 import dao.AbonnementDAO;
+import dao.interfaceDAO.AbonnementInterface;
 import dbConnection.DataBase;
 import model.entity.Abonnement;
 import model.entity.AbonnementAvecEngagement;
@@ -17,10 +18,12 @@ import java.util.List;
 import java.util.Optional;
 
 public class AbonnementServiceImpl {
-
+    private final AbonnementInterface abonnementDao;
+    public AbonnementServiceImpl(AbonnementInterface abonnementDao) {
+        this.abonnementDao = abonnementDao;
+    }
 
     public  void createAbonnement(Abonnement abonnement,int dureeEngagementMois) {
-        AbonnementDAO abonnementDAO = new AbonnementDAO();
         String id = UuidGen.codeGen();
         if (id == null) {
             System.out.println("Abonnement ID is null, cannot create abonnement.");
@@ -31,24 +34,22 @@ public class AbonnementServiceImpl {
             return;
         }
         LocalDate date =  DateVerfied.DateNowVirfied(abonnement.getDateDebut());
-
         if (abonnement.getType() == TypeAbonnement.SANS_ENGAGEMENT){
-            LocalDate dateFin = DateVerfied.datefinSansEng(abonnement.getDateFin());
+            LocalDate dateFin = DateVerfied.datefinSansEng(date);
             Abonnement abonnement1 = new AbonnementSansEngagement(id,abonnement.getNomService(), abonnement.getMontantMensuel(), date,dateFin, abonnement.getStatut(), abonnement.getType());
-            abonnementDAO.create(abonnement1);
+            abonnementDao.create(abonnement1);
         } else if (abonnement.getType() == TypeAbonnement.AVEC_ENGAGEMENT && dureeEngagementMois > 3) {
-            LocalDate DateFin = DateVerfied.dateFinAvecEng(abonnement.getDateFin(),dureeEngagementMois);
+            LocalDate DateFin = DateVerfied.dateFinAvecEng(date,dureeEngagementMois);
             Abonnement abonnement1 = new AbonnementAvecEngagement(id,abonnement.getNomService(), abonnement.getMontantMensuel(), date,DateFin, abonnement.getStatut(),  dureeEngagementMois,abonnement.getType());
-            abonnementDAO.create(abonnement1);
+            abonnementDao.create(abonnement1);
         }
 
     }
 
     public Abonnement findById(String id){
-        AbonnementDAO abonnementDAO = new AbonnementDAO();
         try {
-            Abonnement abonnement = abonnementDAO.findById(id).orElse(null);
-            if (abonnement == null) {
+            Abonnement abonnement = abonnementDao.findById(id).orElse(null);
+            if (abonnement != null) {
                 System.out.println("Abonnement trouvé : " + abonnement.getNomService());
             } else {
                 System.out.println("Abonnement non trouvé avec l'ID : " + id);
@@ -61,42 +62,39 @@ public class AbonnementServiceImpl {
     }
 
     public List<Abonnement> findAll(){
-        AbonnementDAO abonnementDAO = new AbonnementDAO();
-            List<Abonnement> abonnements = abonnementDAO.findAll();
+            List<Abonnement> abonnements = abonnementDao.findAll();
             return abonnements;
     };
 
     public void deleteById(String id){
-        AbonnementDAO abonnementDAO = new AbonnementDAO();
-         abonnementDAO.delete(id);
+        abonnementDao.delete(id);
     };
 
     public void updateAbonnement(Abonnement abonnement, int dureeEngagementMois){
-        AbonnementDAO abonnementDAO = new AbonnementDAO();
         if (abonnement.getMontantMensuel() <= 0) {
             System.out.println("Montant mensuel must be greater than zero.");
             return;
         }
         if (abonnement.getType() == TypeAbonnement.SANS_ENGAGEMENT){
             Abonnement abonnement1 = new AbonnementSansEngagement(abonnement.getId(),abonnement.getNomService(), abonnement.getMontantMensuel(), null ,null, abonnement.getStatut(), abonnement.getType());
-            abonnementDAO.update(abonnement1,0);
+            abonnementDao.update(abonnement1,0);
         } else if (abonnement.getType() == TypeAbonnement.AVEC_ENGAGEMENT && dureeEngagementMois > 3) {
-            Abonnement abonnement1 = new AbonnementAvecEngagement(abonnement.getId(),abonnement.getNomService(), abonnement.getMontantMensuel(), null,null, abonnement.getStatut(), dureeEngagementMois, abonnement.getType());
-            abonnementDAO.update(abonnement1,dureeEngagementMois);
+            Abonnement abonnement1 = new AbonnementAvecEngagement(abonnement.getId(),abonnement.getNomService(), abonnement.getMontantMensuel(), abonnement.getDateDebut(),null, abonnement.getStatut(), dureeEngagementMois, abonnement.getType());
+            abonnementDao.update(abonnement1,dureeEngagementMois);
         }
     };
 
     public List<Abonnement> findActiveSubscriptions(){
-        AbonnementDAO abonnementDAO = new AbonnementDAO();
-        return abonnementDAO.findActiveSubscriptions();
+        return abonnementDao.findActiveSubscriptions();
     }
+
+
 
     public void cancelSubscription(String id){
         if (id == null) {
             System.out.println("Abonnement ID is null, cannot cancel abonnement.");
             return;
         }
-        AbonnementDAO abonnementDAO = new AbonnementDAO();
-        abonnementDAO.canseldAbonnement(id);
+        abonnementDao.canseldAbonnement(id);
     }
 }
