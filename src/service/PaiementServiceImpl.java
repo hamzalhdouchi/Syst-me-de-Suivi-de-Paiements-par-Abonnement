@@ -132,6 +132,17 @@ public class PaiementServiceImpl {
     public double SommeImpyeAbonnement(){
         return paiementDao.SommeImpyeAbonnement();
     }
+
+
+    public double rapportMensuel(int mois, int annee) {
+        LocalDate start = LocalDate.of(annee, mois, 1);
+        LocalDate end = start.withDayOfMonth(start.lengthOfMonth());
+        List<Paiement> paiements = paiementDao.findByDateRange(start, end);
+
+        double total = paiements.stream().mapToDouble(Paiement::getMontent).sum();
+        System.out.println("Total des paiements pour " + mois + "/" + annee + " : " + total);
+        return total;
+    }
 }
 
 
