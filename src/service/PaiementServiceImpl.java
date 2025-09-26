@@ -153,6 +153,12 @@ public class PaiementServiceImpl {
         System.out.println("Total des paiements pour l'année " + annee + " : " + total);
         return total;
     }
+
+    public List<Paiement> rapportImpayes() {
+        List<Paiement> impayes = paiementDao.PImpyeAbonnement();
+        System.out.println("Nombre de paiements impayés : " + impayes.size());
+        return impayes;
+    }
 }
 
 
