@@ -7,9 +7,8 @@ import model.entity.Paiement;
 import util.Logger;
 import model.enums.StatutPaiement;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -213,6 +212,36 @@ public class PaiementDAO implements PaiementInterface {
                 .limit(5)
                 .collect(Collectors.toList());
         return newPaiements;
+    }
+
+    public List<Paiement> findByDateRange(LocalDate start, LocalDate end) {
+        List<Paiement> paiements = new ArrayList<>();
+        String sql = "SELECT * FROM paiement WHERE datePaiement BETWEEN ? AND ?";
+
+        try{
+             PreparedStatement ps = this.connection.prepareStatement(sql);
+            ps.setDate(1, Date.valueOf(start));
+            ps.setDate(2, Date.valueOf(end));
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Paiement p = new Paiement(
+                        rs.getString("idAbonnement"),
+                        rs.getString("idPaiement"),
+                        rs.getDate("dateEcheance").toLocalDate(),
+                        rs.getDate("datePaiement").toLocalDate(),
+                        StatutPaiement.valueOf(rs.getString("statut")),
+                        rs.getString("typePaiement"),
+                        rs.getDouble("montant")
+                );
+                paiements.add(p);
+            }
+
+        } catch (SQLException e){
+            Logger.error(e.getMessage());
+        }
+
+        return paiements;
     }
 
 }
