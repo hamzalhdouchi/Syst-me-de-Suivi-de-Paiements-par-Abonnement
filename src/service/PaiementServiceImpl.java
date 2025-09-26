@@ -143,6 +143,16 @@ public class PaiementServiceImpl {
         System.out.println("Total des paiements pour " + mois + "/" + annee + " : " + total);
         return total;
     }
+
+    public double rapportAnnuel(int annee) {
+        LocalDate start = LocalDate.of(annee, 1, 1);
+        LocalDate end = LocalDate.of(annee, 12, 31);
+        List<Paiement> paiements = paiementDao.findByDateRange(start, end);
+
+        double total = paiements.stream().mapToDouble(Paiement::getMontent).sum();
+        System.out.println("Total des paiements pour l'année " + annee + " : " + total);
+        return total;
+    }
 }
 
 
