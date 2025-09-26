@@ -16,7 +16,7 @@ This Java 8 console application centralizes the management of personal and profe
 
 ## Project Structure
 
-
+```
 src/
 ├── entity/
 │   ├── Abonnement.java
@@ -37,7 +37,7 @@ src/
 │   └── ConsoleMenu.java
 └── ui.Main.java
 
-
+```
 - **entity/**: Domain models for subscriptions and payments.
 - **dao/**: Data access objects for database operations via JDBC.
 - **service/**: Business logic for managing subscriptions and payments.
