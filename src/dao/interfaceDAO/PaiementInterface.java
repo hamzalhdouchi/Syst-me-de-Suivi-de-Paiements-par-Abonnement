@@ -2,6 +2,7 @@ package dao.interfaceDAO;
 
 import model.entity.Paiement;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface PaiementInterface {
@@ -14,4 +15,5 @@ public interface PaiementInterface {
     public double SommeImpyeAbonnement();
     public List<Paiement> PImpyeAbonnement();
     public List<Paiement> last5Paiements();
+    public List<Paiement> findByDateRange(LocalDate start, LocalDate end);
 }
