@@ -1,5 +1,6 @@
 import dao.AbonnementDAO;
 import dao.PaiementDAO;
+import model.entity.Paiement;
 import service.AbonnementServiceImpl;
 import service.PaiementServiceImpl;
 import ui.MainMenu;
@@ -21,6 +22,7 @@ public class Main {
         MenuPaiements menuPaiements = new MenuPaiements(paiementService);
         MainMenu mainMenu = new MainMenu(menuPaiements ,menu);
         mainMenu.mainMenu();
+
 
 
     }
