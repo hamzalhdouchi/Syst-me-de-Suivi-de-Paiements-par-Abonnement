@@ -6,6 +6,7 @@ import service.PaiementServiceImpl;
 
 import java.util.InputMismatchException;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class MenuPaiements {
@@ -28,6 +29,7 @@ public class MenuPaiements {
             System.out.println("5. Consulter les paiements manqués et montant total impayé");
             System.out.println("6. Afficher la somme payée d’un abonnement");
                 System.out.println("7. Afficher les 5 derniers paiements");
+            System.out.println("8. Afficher Les Rapport");
             System.out.println("0. Retour");
             System.out.print("Choix : ");
             Scanner sc = new Scanner(System.in);
@@ -63,6 +65,9 @@ public class MenuPaiements {
                 case 7:
                     last5Paiements();
                 break;
+                case 8:
+                    rapportchoix();
+                    break;
                 case 0: back = true; break;
                 default: System.out.println("⚠Choix invalide.");
             }
@@ -196,5 +201,66 @@ public class MenuPaiements {
         double somme = paiementService.SommeImpyeAbonnement();
         System.out.println("La somme totale impayée est : " + somme);
         System.out.println("\n-------------------------------------------------------------------");
+    }
+
+    public void rapportchoix(){
+
+        while(true){
+            System.out.println("---------------Rapport choix------------------");
+            System.out.println("1 : Rapport Mensuel");
+            System.out.println("2 : Rapport Annuel");
+            System.out.println("3 : Rapport Impayes");
+            System.out.println("0 : Return");
+            int choix ;
+            try{
+                System.out.println("Entre Votre Choix ");
+                 choix = sc.nextInt();
+
+
+
+            switch (choix){
+
+                case 1:
+                    rapportMensuel();
+                    break;
+                case 2:
+                    rapportAnnuel();
+                    break;
+                    case 3:
+                        afficherImpayes();
+                        break;
+                case 0:
+                    return;
+                        default:
+
+            }
+            }catch(InputMismatchException e){
+                System.out.println("Votre Choix est incorrecte");
+            }
+        }
+
+
+    }
+
+    private void rapportMensuel() {
+        System.out.print("Mois (1-12) : ");
+        int mois = sc.nextInt();
+        System.out.print("Année : ");
+        int annee = sc.nextInt();
+        double total = paiementService.rapportMensuel(mois, annee);
+        System.out.println("Total paiements mensuel : " + total);
+    }
+
+    private void rapportAnnuel() {
+        System.out.print("Année : ");
+        int annee = sc.nextInt();
+        double total = paiementService.rapportAnnuel(annee);
+        System.out.println("Total paiements annuel : " + total);
+    }
+
+    private void afficherImpayes() {
+        List<Paiement> impayes = paiementService.rapportImpayes();
+        System.out.println("--- Paiements impayés ---");
+        impayes.forEach(p -> System.out.println("ID: " + p.getIdPaiement() + ", Montant: " + p.getMontent()));
     }
 }
