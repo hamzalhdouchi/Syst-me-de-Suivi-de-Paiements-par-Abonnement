@@ -1,0 +1,70 @@
+[ERROR] 2025-09-24T14:49:25.062 - No value specified for parameter 6
+[ERROR] 2025-09-24T14:50:14.120 - No value specified for parameter 6
+[ERROR] 2025-09-24T14:56:34.594 - No value specified for parameter 6
+[ERROR] 2025-09-24T14:57:37.113 - No value specified for parameter 6
+[ERROR] 2025-09-24T15:01:20.244 - Unknown column 'statut' in 'field list'
+[ERROR] 2025-09-24T16:22:05.500 - Unknown column 'typeEngagement' in 'field list'
+[ERROR] 2025-09-24T16:23:13.059 - Field 'id' doesn't have a default value
+[ERROR] 2025-09-24T17:15:36.926 - Column 'typeEngagement' not found.
+[ERROR] 2025-09-24T17:15:36.927 - Abonnement non trouvé
+[ERROR] 2025-09-24T17:15:36.928 - Abonnement non trouvé
+[ERROR] 2025-09-24T17:15:36.928 - null
+[ERROR] 2025-09-24T17:20:09.800 - Name is null
+[ERROR] 2025-09-24T17:20:09.802 - Abonnement non trouvé
+[ERROR] 2025-09-24T17:20:09.802 - Abonnement non trouvé
+[ERROR] 2025-09-24T17:20:09.802 - null
+[ERROR] 2025-09-24T17:23:39.473 - Name is null
+[ERROR] 2025-09-24T17:23:39.475 - Abonnement non trouvé
+[ERROR] 2025-09-24T17:23:39.475 - Abonnement non trouvé
+[ERROR] 2025-09-24T17:23:39.475 - null
+[ERROR] 2025-09-24T17:25:17.720 - Name is null
+[ERROR] 2025-09-24T17:25:17.721 - Abonnement non trouvé
+[ERROR] 2025-09-24T17:25:17.721 - Abonnement non trouvé
+[ERROR] 2025-09-24T17:25:17.721 - null
+[ERROR] 2025-09-24T17:26:51.273 - Name is null
+[ERROR] 2025-09-24T17:28:37.822 - Name is null
+[ERROR] 2025-09-24T17:29:25.883 - Name is null
+[ERROR] 2025-09-24T17:29:39.633 - Name is null
+[ERROR] 2025-09-24T18:40:32.997 - Name is null
+[ERROR] 2025-09-24T18:42:09.169 - Name is null
+[ERROR] 2025-09-24T18:45:43.547 - Name is null
+[ERROR] 2025-09-24T18:46:52.938 - Name is null
+[ERROR] 2025-09-24T18:49:12.598 - Unknown column 'statut' in 'field list'
+[ERROR] 2025-09-24T18:49:49.703 - Unknown column 'statut' in 'field list'
+[ERROR] 2025-09-24T19:26:05.354 - Abonnement non trouvé
+[ERROR] 2025-09-24T19:26:05.354 - Abonnement non trouvé
+[ERROR] 2025-09-24T19:26:05.354 - null
+[ERROR] 2025-09-24T19:35:19.569 - Abonnement non trouvé
+[ERROR] 2025-09-24T19:35:19.570 - Abonnement non trouvé
+[ERROR] 2025-09-24T19:36:31.996 - Abonnement non trouvé
+[ERROR] 2025-09-24T19:36:31.998 - Abonnement non trouvé
+[ERROR] 2025-09-24T19:38:43.546 - Abonnement non trouvé
+[ERROR] 2025-09-24T19:38:43.547 - Abonnement non trouvé
+[ERROR] 2025-09-24T19:39:41.358 - Abonnement non trouvé
+[ERROR] 2025-09-24T19:39:41.359 - Abonnement non trouvé
+[ERROR] 2025-09-24T19:42:27.131 - Abonnement non trouvé
+[ERROR] 2025-09-24T19:42:27.131 - Abonnement non trouvé
+[ERROR] 2025-09-24T19:43:59.187 - Abonnement non trouvé
+[ERROR] 2025-09-24T19:43:59.188 - Abonnement non trouvé
+[ERROR] 2025-09-24T19:45:00.055 - Column 'statut' not found.
+[ERROR] 2025-09-24T19:47:07.716 - Parameter index out of range (4 > number of parameters, which is 3).
+[ERROR] 2025-09-24T19:47:07.759 - You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(nomService ,statut) VALUE ('Fffff','SUSPENDU') where id = '4e0654ea-3d4b-4eed-b' at line 1
+[ERROR] 2025-09-24T19:48:49.670 - Parameter index out of range (4 > number of parameters, which is 3).
+[ERROR] 2025-09-24T19:48:49.716 - Unknown column 'statut' in 'field list'
+[ERROR] 2025-09-25T14:33:08.831 - Unknown column 'id' in 'field list'
+[ERROR] 2025-09-25T14:41:15.712 - null
+[ERROR] 2025-09-25T14:42:52.828 - null
+[ERROR] 2025-09-25T14:48:21.965 - there no paiement in this id : null
+[ERROR] 2025-09-25T14:50:40.199 - there no paiement in this id : null
+[ERROR] 2025-09-25T15:03:55.744 - Unknown column 'id' in 'where clause'
+[ERROR] 2025-09-25T15:06:11.346 - Aucun paiement non payé trouvé pour cet abonnement.
+[ERROR] 2025-09-25T15:07:18.176 - Aucun paiement non payé trouvé pour cet abonnement.
+[ERROR] 2025-09-25T15:08:32.793 - Aucun paiement non payé trouvé pour cet abonnement.
+[ERROR] 2025-09-25T15:57:17.898 - Aucun paiement trouvé pour cet abonnement.
+[ERROR] 2025-09-25T16:30:38.755 - Aucun paiement trouvé pour cet abonnement.
+[ERROR] 2025-09-26T10:17:05.571 - Abonnement non trouvé
+[ERROR] 2025-09-26T10:20:09.720 - Abonnement non trouvé
+[ERROR] 2025-09-26T10:34:23.442 - Abonnement non trouvé
+[ERROR] 2025-09-26T11:00:28.838 - Abonnement non trouvé
+[ERROR] 2025-09-26T11:49:48.255 - Abonnement non trouvé
+[ERROR] 2025-09-26T11:50:32.403 - Abonnement non trouvé
