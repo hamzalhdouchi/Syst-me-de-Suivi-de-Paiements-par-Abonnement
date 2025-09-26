@@ -10,11 +10,12 @@ public class DateVerfied {
 
     public static LocalDate DateNowVirfied(LocalDate date) {
         LocalDate now = LocalDate.now();
-        if ( date.isBefore(now) && date == null) {
+        if (date == null || date.isBefore(now) ) {
             return now;
-        }
-        return date;
+        } else {
+            return date;
 
+        }
     }
 
     public static LocalDate datefinSansEng(LocalDate date) {
