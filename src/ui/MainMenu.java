@@ -2,14 +2,19 @@ package ui;
 
 import java.util.Scanner;
 
-import static ui.menuAbonnements.menuAbonnement;
-import static ui.menuPaiements.menuPaiements;
-import static ui.menuRapports.menuRapports;
+import service.PaiementServiceImpl;
+import ui.MenuAbonnements
 
 public class Main {
 
+    private final static Scanner scanner = new Scanner(System.in);
+
+
     public static void main(String[] args) {
         boolean exit = false;
+        
+        MenuAbonnements menuAbonnements = new MenuAbonnements();
+        MenuPaiements menuPaiements = new MenuPaiements();
 
         while (!exit) {
             System.out.println("\n========== MENU PRINCIPAL ==========");
@@ -18,16 +23,15 @@ public class Main {
             System.out.println("3. Rapports financiers");
             System.out.println("0. Quitter");
             System.out.print("Choix : ");
-            Scanner sc = new Scanner(System.in);
-            int choix = sc.nextInt();
-            sc.nextLine();
+            int choix = scanner.nextInt();
+            scanner.nextLine();
 
             switch (choix) {
                 case 1:
-                    menuAbonnement();
+                    MenuAbonnements.menuAbonnements();
                     break;
                 case 2:
-                    menuPaiements();
+                    MenuPaiements();
                     break;
                 case 3:
                     menuRapports();
