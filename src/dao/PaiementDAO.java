@@ -2,6 +2,7 @@ package dao;
 
 import dao.interfaceDAO.PaiementInterface;
 import dbConnection.DataBase;
+import model.entity.Abonnement;
 import model.entity.Paiement;
 import util.Logger;
 import model.enums.StatutPaiement;
@@ -10,16 +11,21 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class PaiementDAO implements PaiementInterface {
 
-    private Connection connection = DataBase.getInstance().getConnection();
+    private final Connection connection ;
+
+    public PaiementDAO(Connection con) {
+        this.connection = con;
+    }
 
 
     public void create(Paiement p) {
-        String sql = "INSERT INTO paiement (id, idAbonnement, montant, datePaiement, dateEcheance, statut, TypePaiement) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO paiement (idPaiement, idAbonnement, montant, datePaiement, dateEcheance, statut, TypePaiement) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement stmt = this.connection.prepareStatement(sql);
             stmt.setString(1, p.getIdPaiement());
@@ -30,7 +36,7 @@ public class PaiementDAO implements PaiementInterface {
             stmt.setString(6, p.getStatut().toString());
             stmt.setString(7, p.getTypePaiement().toString());
             stmt.executeUpdate();
-            System.out.println("--------------Paiement ajouté avec succès !--------------");
+            System.out.println("--------------Paiement ajouté avec succès Votre ID de paiement : " + p.getIdPaiement() + "--------------");
         } catch (Exception e) {
             Logger.error(e.getMessage());
         }
@@ -83,13 +89,11 @@ public class PaiementDAO implements PaiementInterface {
     ;
 
     public void update(Paiement p) {
-        String sql = "UPDATE paiement SET  montant = ?,  statut = ?, TypePaiement = ? WHERE id = ?";
+        String sql = "UPDATE paiement SET   statut = ? WHERE idPaiement = ?";
         try {
             PreparedStatement stmt = this.connection.prepareStatement(sql);
-            stmt.setString(1, p.getIdAbonnement());
-            stmt.setDouble(2, p.getMontent());
-            stmt.setString(3, p.getStatut().toString());
-            stmt.setString(4, p.getTypePaiement().toString());
+            stmt.setString(1, p.getStatut().toString());
+            stmt.setString(2, p.getIdPaiement());
             int rowsAffected = stmt.executeUpdate();
             if (rowsAffected > 0) {
                 System.out.println("--------------Paiement mis à jour avec succès !--------------");
@@ -97,14 +101,14 @@ public class PaiementDAO implements PaiementInterface {
                 System.out.println("Aucun paiement trouvé avec l'ID spécifié.");
             }
         } catch (Exception e) {
-            Logger.error(e.getMessage());
+            Logger.error("there no paiement in this id : " + e.getMessage());
         }
     }
 
     ;
 
     public void delete(String idPaiement) {
-        String sql = "DELETE FROM paiement WHERE id = ?";
+        String sql = "DELETE FROM paiement WHERE idPaiement = ?";
         try {
             PreparedStatement stmt = this.connection.prepareStatement(sql);
             stmt.setString(1, idPaiement);
@@ -121,7 +125,7 @@ public class PaiementDAO implements PaiementInterface {
 
     ;
 
-    public List<Paiement> findByAbonnement(String idAbonnement, String type) throws Exception {
+    public List<Paiement> findByAbonnement(String idAbonnement, String type)  {
         List<Paiement> paiments = findAll();
         List<Paiement> paiementsNonPaye = new ArrayList<>();
         if (type.equals("TOUS")) {
@@ -130,7 +134,6 @@ public class PaiementDAO implements PaiementInterface {
             if (paiementsNonPaye.isEmpty()) {
                 String error = "Aucun paiement trouvé pour cet abonnement.";
                 Logger.error(error);
-                throw new Exception(error);
             }
             return paiementsNonPaye;
         } else if (type.equals("PAIEMENT")) {
@@ -139,7 +142,6 @@ public class PaiementDAO implements PaiementInterface {
             if (paiementsNonPaye.isEmpty()) {
                 String error = "Aucun paiement payé trouvé pour cet abonnement.";
                 Logger.error(error);
-                throw new Exception(error);
             }
             return paiementsNonPaye;
         } else if (type.equals("NON_PAIEMENT")) {
@@ -148,7 +150,6 @@ public class PaiementDAO implements PaiementInterface {
             if (paiementsNonPaye.isEmpty()) {
                 String error = "Aucun paiement non payé trouvé pour cet abonnement.";
                 Logger.error(error);
-                throw new Exception(error);
             }
             return paiementsNonPaye;
         } else if (type.equals("EN_RETARD")) {
@@ -157,10 +158,61 @@ public class PaiementDAO implements PaiementInterface {
             if (paiementsNonPaye.isEmpty()) {
                 String error = "Aucun paiement non payé trouvé pour cet abonnement.";
                 Logger.error(error);
-                throw new Exception(error);
             }
             return paiementsNonPaye;
         }
         return null;
     }
+
+    public List<Paiement> PImpyeAbonnement() {
+        List<Paiement> Paiement = findAll();
+        Paiement = Paiement.stream()
+                .filter(p -> p.getStatut() == StatutPaiement.NON_PAYE)
+                .collect(Collectors.toList());
+
+       return Paiement;
+    }
+
+    public double SommeImpyeAbonnement() {
+
+        List<Paiement> Paiement = PImpyeAbonnement();
+
+        if (Paiement.size() == 0) {
+            System.out.println("Aucun paiement trouvé.");
+            return 0;
+        }
+        double someP = Paiement.stream()
+                .mapToDouble(p -> p.getMontent())
+                .sum();
+        return someP;
+
+    }
+
+    public double SommePayéeAbonnement(String idAbonnement) {
+
+        List<Paiement> Paiement = findByAbonnement(idAbonnement,"TOUS");
+
+        if (Paiement.size() == 0) {
+            System.out.println("Aucun paiement trouvé pour cet abonnement.");
+            return 0;
+        }
+
+        double someP = Paiement.stream()
+                .mapToDouble(p -> p.getMontent())
+                .sum();
+        return someP;
+
+    }
+
+    public List<Paiement> last5Paiements() {
+        List<Paiement> paiements = new ArrayList<>();
+        paiements = findAll();
+
+        List<Paiement> newPaiements = new ArrayList<>();
+        newPaiements = paiements.stream().sorted(Comparator.comparing(Paiement::getDatePaiement).reversed())
+                .limit(5)
+                .collect(Collectors.toList());
+        return newPaiements;
+    }
+
 }
