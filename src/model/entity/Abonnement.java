@@ -31,7 +31,7 @@ public abstract class Abonnement {
     protected TypeAbonnement type;
 
     public Abonnement(String id,String nomService, double montantMensuel, LocalDate dateDebut, LocalDate dateFin, statusabonnement statut, TypeAbonnement type) {
-        this.id = UUID.randomUUID().toString();
+        this.id = id;
         this.nomService = nomService;
         this.montantMensuel = montantMensuel;
         this.dateDebut = dateDebut;
