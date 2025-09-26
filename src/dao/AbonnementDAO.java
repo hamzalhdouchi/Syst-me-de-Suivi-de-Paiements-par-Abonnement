@@ -8,6 +8,7 @@ import model.entity.AbonnementSansEngagement;
 import model.enums.StatutPaiement;
 import model.enums.TypeAbonnement;
 import model.enums.statusabonnement;
+import util.DateVerfied;
 import util.Logger;
 
 import java.sql.*;
@@ -21,47 +22,61 @@ import java.util.stream.Collectors;
 public class AbonnementDAO implements AbonnementInterface {
 
     private Connection con;
-    public AbonnementDAO() {
-        this.con = DataBase.getInstance().getConnection();
+    public AbonnementDAO(Connection con) {
+        this.con = con;
     }
     public void create(Abonnement a){
-
-        a.setId( UUID.randomUUID().toString());
-        String sql = "INSERT INTO Abonnement (nomService, montantMensuel, dateDebut, dateFin, statut,dureeEngagementMois,typeEngagement) VALUES (?, ?, ?, ?, ?,?,?)";
+        String sql = "INSERT INTO Abonnement (id ,nomService, montantMensuel, dateDebut, dateFin, statutAbonnement,dureeEngagementMois,typeAbonnement) VALUES (?, ?, ?, ?, ?,?,?, ?)";
         try{
             PreparedStatement pstmt = this.con.prepareStatement(sql);
-             pstmt.setString(1, a.getNomService());
-             pstmt.setDouble(2, a.getMontantMensuel());
-             pstmt.setDate(3, Date.valueOf(a.getDateDebut()));
-             pstmt.setDate(4, Date.valueOf(a.getDateFin()));
-             pstmt.setString(5, a.getStatut().toString());
+            pstmt.setString(1, a.getId());
+             pstmt.setString(2, a.getNomService());
+             pstmt.setDouble(3, a.getMontantMensuel());
+             pstmt.setDate(4, Date.valueOf(a.getDateDebut()));
+             pstmt.setDate(5, Date.valueOf(a.getDateFin()));
+             pstmt.setString(6, a.getStatut().toString());
                 if (a instanceof AbonnementAvecEngagement){
-                    pstmt.setInt(6, ((AbonnementAvecEngagement) a).getDureeEngagementMois());
-                    pstmt.setString(7, "AVEC_ENGAGEMENT");
+                    pstmt.setInt(7, ((AbonnementAvecEngagement) a).getDureeEngagementMois());
+                    pstmt.setString(8, "AVEC_ENGAGEMENT");
                 } else {
-                    pstmt.setString(7, "SANS_ENGAGEMENT");
+                    pstmt.setInt(7, 0);
+                    pstmt.setString(8, "SANS_ENGAGEMENT");
                 }
              pstmt.executeUpdate();
-
+            System.out.println("Votre ID d'abonnement : " + a.getId());
             System.out.println("-----------------Abonnement créé avec succès.-------------------");
         }catch(SQLException e){
             Logger.error(e.getMessage());
         }
     };
-    public Optional<Abonnement> findById(String id) {
-        try {
-            List<Abonnement> abonnements = findAll();
+    public  Optional<Abonnement> findById(String id) {
+        String sql = "SELECT * FROM abonnement WHERE id = ?";
 
-            Abonnement abonnement = abonnements.stream()
-                    .filter(a -> a.getId().equals(id))
-                    .findFirst()
-                    .orElseThrow(() ->{
-                       Exception error =   new Exception("Abonnement non trouvé");
-                        Logger.error(error.getMessage());
-                        return error;
-                    });
-            return Optional.of(abonnement);
+        try (PreparedStatement stmt = this.con.prepareStatement(sql)) {
+            stmt.setString(1, id);
+            ResultSet rs = stmt.executeQuery();
 
+            if (rs.next()) {
+                String nomService = rs.getString("nomService");
+                double montantMensuel = rs.getDouble("montantMensuel");
+                LocalDate dateDebut = rs.getDate("dateDebut").toLocalDate();
+                LocalDate dateFin = rs.getDate("dateFin").toLocalDate();
+                String statutStr = rs.getString("statutAbonnement");
+                statusabonnement statut = statutStr != null ? statusabonnement.valueOf(statutStr) : null;
+                int dureeEngagement = rs.getInt("dureeEngagementMois");
+                TypeAbonnement type = TypeAbonnement.valueOf(rs.getString("typeAbonnement"));
+
+                Abonnement abonnement;
+                if (dureeEngagement == 0) {
+                    abonnement = new AbonnementSansEngagement(id, nomService, montantMensuel, dateDebut, dateFin, statut, type);
+                } else {
+                    abonnement = new AbonnementAvecEngagement(id, nomService, montantMensuel, dateDebut, dateFin, statut, dureeEngagement, type);
+                }
+                return Optional.of(abonnement);
+            } else {
+                Logger.error("Abonnement non trouvé");
+                return Optional.empty();
+            }
         } catch (Exception e) {
             Logger.error(e.getMessage());
             return Optional.empty();
@@ -69,7 +84,7 @@ public class AbonnementDAO implements AbonnementInterface {
     }
     public List<Abonnement> findAll() {
         List<Abonnement> abonnements = new ArrayList<>();
-        String SQL = "SELECT * FROM Abonnement";
+        String SQL = "SELECT * FROM abonnement";
 
         try {
             PreparedStatement stmt = this.con.prepareStatement(SQL);
@@ -83,19 +98,20 @@ public class AbonnementDAO implements AbonnementInterface {
                 LocalDate dateFin = rs.getDate("dateFin").toLocalDate();
                 String status = rs.getString("statutAbonnement");
                 int dureeEngagement = rs.getInt("dureeEngagementMois");
-                TypeAbonnement type = TypeAbonnement.valueOf(rs.getString("typeEngagement"));
+                String type = rs.getString("typeAbonnement");
+                TypeAbonnement typeAbonnement = TypeAbonnement.valueOf(type);
                 statusabonnement statut = statusabonnement.valueOf(status);
-                StatutPaiement statutPaiement = StatutPaiement.valueOf(rs.getString("statutPaiement"));
                 if (dureeEngagement == 0) {
-                    AbonnementSansEngagement abonnement = new AbonnementSansEngagement(id, nomService, montantMensuel, dateDebut, dateFin, statut, type);
+                    AbonnementSansEngagement abonnement = new AbonnementSansEngagement(id, nomService, montantMensuel, dateDebut, dateFin, statut, typeAbonnement);
                     abonnements.add(abonnement);
                 } else {
-                    AbonnementAvecEngagement abonnement = new AbonnementAvecEngagement(id, nomService, montantMensuel, dateDebut, dateFin, statut, dureeEngagement, type);
+                    AbonnementAvecEngagement abonnement = new AbonnementAvecEngagement(id, nomService, montantMensuel, dateDebut, dateFin, statut, dureeEngagement, typeAbonnement);
                     abonnements.add(abonnement);
                 }
             }
             System.out.println("-----------------Abonnements récupérés avec succès.-------------------");
         } catch (Exception e) {
+            System.out.println("Erreur lors de la récupération des abonnements : " + e.getMessage());
             Logger.error(e.getMessage());
             return new ArrayList<>();
         }
@@ -103,26 +119,36 @@ public class AbonnementDAO implements AbonnementInterface {
         return abonnements;
     }
 
-    public void update(Abonnement a, int dureeEngagementMois){
-        if (a instanceof AbonnementAvecEngagement){
-            String  sql = "UPDATE abonnement (nomService ,statutAbonnement, dureeEngagementMois) VALUE (?,?,?) where id = ?";
-        }
-        String sql = "UPDATE abonnement (nomService ,statut) VALUE (?,?) where id = ?";
-        try {
-            PreparedStatement stmt = this.con.prepareStatement(sql);
-            stmt.setString(1, a.getNomService());
-            stmt.setString(2, a.getStatut().toString());
-            stmt.setString(3, a.getId());
-            if(a instanceof AbonnementAvecEngagement){
-                stmt.setInt(4, dureeEngagementMois);
-            }
-            stmt.executeUpdate();
-            System.out.println("-----------------Abonnement mis à jour avec succès.-------------------");
-        }catch (Exception e){
-            Logger.error(e.getMessage());
+    public void update(Abonnement a, int dureeEngagementMois) {
+
+        String sql;
+        LocalDate DATE;
+        if (a instanceof AbonnementAvecEngagement) {
+            sql = "UPDATE abonnement SET nomService = ?, statutAbonnement = ?, dureeEngagementMois = ?, dateFin = ? WHERE id = ?";
+            DATE = DateVerfied.dateFinAvecEng(a.getDateDebut(), dureeEngagementMois);
+            a.setDateFin(DATE);
+        } else {
+            sql = "UPDATE abonnement SET nomService = ?, statutAbonnement = ? WHERE id = ?";
         }
 
-    };
+        try (PreparedStatement stmt = this.con.prepareStatement(sql)) {
+            stmt.setString(1, a.getNomService());
+            stmt.setString(2, a.getStatut().toString());
+
+            if (a instanceof AbonnementAvecEngagement) {
+                stmt.setInt(3, dureeEngagementMois);
+                stmt.setDate(4, Date.valueOf(a.getDateFin()));
+                stmt.setString(5, a.getId());
+            } else {
+                stmt.setString(3, a.getId());
+            }
+            stmt.executeUpdate();
+
+            System.out.println("-----------------Abonnement mis à jour avec succès.-------------------");
+        } catch (Exception e) {
+            Logger.error(e.getMessage());
+        }
+    }
     public void delete(String idAbonnement){
         String sql = "DELETE FROM abonnement where id = ?";
         try {
@@ -143,10 +169,12 @@ public class AbonnementDAO implements AbonnementInterface {
     };
 
     public void canseldAbonnement(String idAbonnement){
-        String sql = "UPDATE abonnement SET statut = ? WHERE id = ?";
+
+        String sql = "UPDATE abonnement SET statutAbonnement = ? WHERE id = ?";
+        statusabonnement statutAbonnement = statusabonnement.RESILIE;
         try {
             PreparedStatement stmt = this.con.prepareStatement(sql);
-            stmt.setString(1, statusabonnement.RESILIE.toString());
+            stmt.setString(1, statutAbonnement.toString());
             stmt.setString(2, idAbonnement);
             stmt.executeUpdate();
             System.out.println("-----------------Abonnement annulé avec succès.-------------------");
@@ -154,4 +182,18 @@ public class AbonnementDAO implements AbonnementInterface {
             Logger.error(e.getMessage());
         }
     };
+
+    public void changeDateFin(String idAbonnement, LocalDate newDateFin){
+        String sql = "UPDATE abonnement SET dateFin = ? WHERE id = ?";
+        try {
+            PreparedStatement stmt = this.con.prepareStatement(sql);
+            stmt.setDate(1, Date.valueOf(newDateFin));
+            stmt.setString(2, idAbonnement);
+            stmt.executeUpdate();
+        }catch (Exception e){
+            Logger.error(e.getMessage());
+        }
+    };
+
+
 }
