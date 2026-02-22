@@ -12,9 +12,11 @@ import util.Logger;
 import util.UuidGen;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 public class PaiementServiceImpl {
 
@@ -154,10 +156,18 @@ public class PaiementServiceImpl {
         return total;
     }
 
-    public List<Paiement> rapportImpayes() {
-        List<Paiement> impayes = paiementDao.PImpyeAbonnement();
-        System.out.println("Nombre de paiements impayés : " + impayes.size());
-        return impayes;
+    public List<Paiement>  rapportImpaye(String idAbonnement, String type) {
+
+        List<Paiement> allPaiement = paiementDao.findByAbonnement(idAbonnement, type);
+        StatutPaiement statutPaiement = StatutPaiement.NON_PAYE;
+        List<Paiement> newPaimentList = new ArrayList<>();
+        newPaimentList = allPaiement.stream().filter(p -> p.getStatut().equals(statutPaiement)).collect(Collectors.toList());
+
+        if (newPaimentList.isEmpty()) {
+            System.out.println("Paiement n'existe pas");
+        }
+        return newPaimentList;
+
     }
 }
 

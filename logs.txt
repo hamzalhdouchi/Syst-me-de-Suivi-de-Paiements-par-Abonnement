@@ -68,3 +68,8 @@
 [ERROR] 2025-09-26T11:00:28.838 - Abonnement non trouvé
 [ERROR] 2025-09-26T11:49:48.255 - Abonnement non trouvé
 [ERROR] 2025-09-26T11:50:32.403 - Abonnement non trouvé
+[ERROR] 2025-10-03T11:44:31.544969700 - Abonnement non trouvé
+[ERROR] 2025-10-03T11:44:42.646166200 - Abonnement non trouvé
+[ERROR] 2025-10-03T11:44:44.909522800 - Abonnement non trouvé
+[ERROR] 2025-10-06T10:08:25.347494800 - Aucun paiement trouvé pour cet abonnement.
+[ERROR] 2025-10-06T10:10:12.348044 - Aucun paiement trouvé pour cet abonnement.

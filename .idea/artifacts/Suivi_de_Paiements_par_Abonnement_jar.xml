@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="Suivi_de_Paiements_par_Abonnement:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Suivi_de_Paiements_par_Abonnement_jar</output-path>
+    <root id="archive" name="Suivi_de_Paiements_par_Abonnement.jar">
+      <element id="module-output" name="Suivi_de_Paiements_par_Abonnement" />
+      <element id="extracted-dir" path="$USER_HOME$/Downloads/mysql-connector-j-9.4.0/mysql-connector-j-9.4.0/mysql-connector-j-9.4.0.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
